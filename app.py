@@ -130,7 +130,9 @@ app.layout = dbc.Container([
                         {'label': '>5.000', 'value': 1},
                         {'label': '>10.000', 'value': 2},
                         {'label': '>50.000', 'value': 3},
-                        {'label': '>100.000', 'value': 4}
+                        {'label': '>100.000', 'value': 4},
+                        {'label': '>500.000', 'value': 5},
+                        {'label': '>1.000.000', 'value': 6}
                     ],
                     clearable=True,
                     optionHeight=40,
@@ -145,9 +147,10 @@ app.layout = dbc.Container([
                     id='spending-per-employee-dropdown',
                     options=[
                         {'label': '>1.000', 'value': 1},
-                        {'label': '>10.000', 'value': 2},
-                        {'label': '>50.000', 'value': 3},
-                        {'label': '>100.000', 'value': 4}
+                        {'label': '>5.000', 'value': 2},
+                        {'label': '>10.000', 'value': 3},
+                        {'label': '>50.000', 'value': 4},
+                        {'label': '>100.000', 'value': 5}
                     ],
                     clearable=True,
                     optionHeight=40,
@@ -442,6 +445,10 @@ def update_table(page_current, page_size, sort_by, selected_columns, selected_ye
             filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 50000]
         elif selected_spending == 4:
             filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 100000]
+        elif selected_spending == 5:
+            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 500000]
+        elif selected_spending == 6:
+            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 1000000]
 
     # Filter by spending per employee
     if selected_spending_per_employee:
@@ -453,8 +460,9 @@ def update_table(page_current, page_size, sort_by, selected_columns, selected_ye
             filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 10000]
         elif selected_spending_per_employee == 4:
             filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 50000]
+        elif selected_spending_per_employee == 5:
+            filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 100000]
         
-    
     # Filter DataFrame based on selected columns
     if selected_columns:
         cDff = filtered_df[selected_columns]
