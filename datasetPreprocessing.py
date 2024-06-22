@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas import to_datetime
 
 def preprocess_dataset(file_path):
 
@@ -52,6 +53,11 @@ def preprocess_dataset(file_path):
     cDf['Durchschnitt Betrag'] = pd.to_numeric(cDf['Durchschnitt Betrag'], errors='coerce').fillna(0).astype(int)
     cDf['Durchschnitt Beschäftigte'] = pd.to_numeric(cDf['Durchschnitt Beschäftigte'], errors='coerce').fillna(0).astype(int)
 
+    # Convert to datetime
+    cDf['GeschäftsjahrStart'] = to_datetime(cDf['GeschäftsjahrStart'])
+    cDf['GeschäftsjahrEnde'] = to_datetime(cDf['GeschäftsjahrEnde'])
+
+    # Filter out rows with unnecessary data
     cDf= cDf[((cDf['Durchschnitt Betrag'] > 5000) & (cDf['Durchschnitt Beschäftigte'] > 5)) | (cDf['Durchschnitt Beschäftigte'] > 1) & (cDf['Durchschnitt Betrag']/cDf['Durchschnitt Beschäftigte'] > 20000)].sort_values('Name')
 
     return cDf

@@ -1,11 +1,19 @@
-# Import required libraries
+# -------------------------------------- Import Libraries --------------------------------------
+# Dash
 from dash import Dash, html, dcc, callback, Input, Output
 import dash_bootstrap_components as dbc
-import plotly.graph_objects as go
 import dash.dash_table as dash_table
+import dash_ag_grid as dag
+
+# Plotly
+import plotly.graph_objects as go
+
+# Numpy, Pandas, Random
 import numpy as np
 import pandas as pd
 import random
+
+# Import dataset preprocessing function
 from datasetPreprocessing import preprocess_dataset
 
 # Create a Dash app
@@ -79,6 +87,7 @@ app.layout = dbc.Container([
         ], style={'margin-left': 15, 'margin-right': 15, 'display': 'flex'}),
         html.Div([
             # Dropdowns section for filtering
+            html.H2(html.Span("Filter for Cleaned Dataset:")),
             html.Div([
                 # Fiscal Year Dropdown
                 html.H2('Fiscal Year:'),
@@ -101,7 +110,7 @@ app.layout = dbc.Container([
                 dcc.Dropdown(
                     id='average-employees-dropdown',
                     options=[
-                        {'label': '>1', 'value': 1},
+                        {'label': '>5', 'value': 1},
                         {'label': '>10', 'value': 2},
                         {'label': '>50', 'value': 3},
                         {'label': '>100', 'value': 4}
@@ -410,12 +419,12 @@ def update_table(page_current, page_size, sort_by, selected_columns, selected_ye
     # Filter by year
     if selected_year:
         year_mapping = {1: 2021, 2: 2022, 3: 2023}
-        filtered_df = filtered_df[filtered_df['GeschäftsjahrStart'] == year_mapping[selected_year]]
+        filtered_df = filtered_df[filtered_df['GeschäftsjahrStart'].dt.year == year_mapping[selected_year]]
     
     # Filter by average employees
     if selected_employees:
         if selected_employees == 1:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 1]
+            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 5]
         elif selected_employees == 2:
             filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 10]
         elif selected_employees == 3:
