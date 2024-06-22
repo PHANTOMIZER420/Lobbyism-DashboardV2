@@ -19,7 +19,9 @@ from datasetPreprocessing import preprocess_dataset
 # Create a Dash app
 app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.FLATLY])
 
+
 # -------------------------------------- Data Preparation/Preprocessing --------------------------------------
+
 file_path = '/Users/phantom/Documents/GitHub/Lobbyism-Dashboard/Datasets/Lobbyregister2024_full.csv'
 
 # Load original dataset 
@@ -29,6 +31,7 @@ oDf = pd.read_csv(file_path)
 oDf[' index'] = range(1, len(oDf) + 1)
 
 cDf = preprocess_dataset(file_path)
+
 
 # -------------------------------------- Plot --------------------------------------
 
@@ -48,7 +51,7 @@ fig.update_layout(plot_bgcolor='#010103', width=790, height=730,
 
 # Create a Dash container
 app.layout = dbc.Container([
-    # -------------------------------------- Layout Tabs & Filters --------------------------------------
+    # -------------------------------------- Layout Tabs & Dropdown Filters --------------------------------------
 
     html.Div([
         html.Div([
@@ -163,6 +166,7 @@ app.layout = dbc.Container([
     ], 
     style={'width': 340, 'margin-left': 25, 'margin-top': 25, 'margin-bottom': 25}),
 
+
     # -------------------------------------- Insights Tab --------------------------------------
 
     html.Div([
@@ -181,6 +185,7 @@ app.layout = dbc.Container([
             'margin-bottom': 25,
         })
     ]),
+
 
     # -------------------------------------- Explore Tab --------------------------------------
 
@@ -222,17 +227,39 @@ app.layout = dbc.Container([
                 dcc.Tabs(
                     id='table-tabs', 
                     value='cleaned-tab', 
-                    style={'backgroundColor': 'black', 'color': 'white', 'height': '60px'},
                     children=[
                         dcc.Tab(
                             label='Cleaned Dataset', 
                             value='cleaned-tab',
-                            style={'backgroundColor': 'black', 'color': 'white'}, 
-                            selected_style={'backgroundColor': 'white', 'color': 'black'}),
-                        dcc.Tab(label='Original Dataset', 
+                            style={'backgroundColor': 'black',
+                                   'color': 'white',
+                                   'border-top':'0px',
+                                   'border-left':'0px',                 
+                                   'border-right':'0px',                 
+                                   'border-bottom':'0px'},
+                            selected_style={'backgroundColor': 'black', 
+                                            'color': '#3498db',
+                                            'border-top':'0px',
+                                            'border-left':'0px',                 
+                                            'border-right':'0px',                 
+                                            'border-bottom':'0px'},
+                            ),
+                        dcc.Tab(
+                            label='Original Dataset', 
                             value='original-tab',
-                            style={'backgroundColor': 'black', 'color': 'white'},  
-                            selected_style={'backgroundColor': 'white', 'color': 'black'})
+                            style={'backgroundColor': 'black',
+                                   'color': 'white',
+                                   'border-top':'0px',
+                                   'border-left':'0px',                 
+                                   'border-right':'0px',                 
+                                   'border-bottom':'0px'},
+                            selected_style={'backgroundColor': 'black', 
+                                            'color': '#3498db',
+                                            'border-top':'0px',
+                                            'border-left':'0px',                 
+                                            'border-right':'0px',                 
+                                            'border-bottom':'0px'},
+                            )
                 ]),
                 html.Div(id='table-tabs-content')
                 ]),
@@ -249,6 +276,8 @@ app.layout = dbc.Container([
             'margin-right': 25,
             'margin-bottom': 25,
         }),
+
+
     # -------------------------------------- Cluster Tab --------------------------------------
 
     html.Div([
@@ -314,6 +343,7 @@ def toggle_explore_tab_visibility(selected_tab):
     Output('table-tabs-content', 'children'),
     [Input('table-tabs', 'value')]
 )
+
 def render_content(tab):
     if tab == 'cleaned-tab':
         return dash_table.DataTable(
@@ -326,7 +356,7 @@ def render_content(tab):
                     sort_mode='single',
                     sort_by=[],
                     style_table={'overflowX': 'auto', 'overflowY': 'auto'},
-                    style_header={'backgroundColor': 'dark black','color': 'black','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
+                    style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
                     style_cell={'backgroundColor': 'black','color': 'white','textAlign': 'left', 'fontFamily': 'sans-serif'},
                 )
     elif tab == 'original-tab':
@@ -340,7 +370,7 @@ def render_content(tab):
                     sort_mode='single',
                     sort_by=[],
                     style_table={'overflowX': 'auto', 'overflowY': 'auto'},
-                    style_header={'backgroundColor': 'dark black','color': 'black','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
+                    style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
                     style_cell={'backgroundColor': 'black','color': 'white','textAlign': 'left', 'fontFamily': 'sans-serif'},
                 )
     
@@ -399,6 +429,7 @@ def update_table(page_current, page_size, sort_by, selected_columns):
     
     # Return data and columns
     return oDff.to_dict('records'), columns
+
 
 # -------------------------------------- Update Cleanded Datatable ----------------------------------
 
@@ -487,6 +518,7 @@ def update_table(page_current, page_size, sort_by, selected_columns, selected_ye
     
     # Return data and columns
     return cDff.to_dict('records'), columns
+
 
 # -------------------------------------- Run the app --------------------------------------
 
