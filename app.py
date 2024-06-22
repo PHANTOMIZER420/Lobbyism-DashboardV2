@@ -401,20 +401,19 @@ def update_table(page_current, page_size, sort_by, selected_columns):
     Input('column-dropdown-filter-cleaned', 'value'),
     Input('fiscal-year-dropdown', 'value'),
     Input('average-employees-dropdown', 'value'),
-    Input('average-spending-dropdown', 'value')] # Update table based on selected columns
+    Input('average-spending-dropdown', 'value'),
+    Input('spending-per-employee-dropdown', 'value')] # Update table based on selected columns
 )
-def update_table(page_current, page_size, sort_by, selected_columns, selected_year, selected_employees, selected_spending):
+def update_table(page_current, page_size, sort_by, selected_columns, selected_year, selected_employees, selected_spending, selected_spending_per_employee):
     filtered_df = cDf.copy()  # Start with a copy of the original DataFrame to avoid modifying it directly
     
     # Filter by year
     if selected_year:
-        # Map your 'value' to the actual year or adjust the logic as needed
         year_mapping = {1: 2021, 2: 2022, 3: 2023}
         filtered_df = filtered_df[filtered_df['GeschäftsjahrStart'] == year_mapping[selected_year]]
     
     # Filter by average employees
     if selected_employees:
-        # Adjust these conditions based on your actual data and requirements
         if selected_employees == 1:
             filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 1]
         elif selected_employees == 2:
@@ -426,14 +425,26 @@ def update_table(page_current, page_size, sort_by, selected_columns, selected_ye
     
     # Filter by average spending
     if selected_spending:
-        # Adjust these conditions based on your actual data and requirements
         if selected_spending == 1:
             filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 5000]
         elif selected_spending == 2:
             filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 10000]
         elif selected_spending == 3:
             filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 50000]
-        # Add more conditions if there are more options
+        elif selected_spending == 4:
+            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 100000]
+
+    # Filter by spending per employee
+    if selected_spending_per_employee:
+        if selected_spending_per_employee == 1:
+            filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 1000]
+        elif selected_spending_per_employee == 2:
+            filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 5000]
+        elif selected_spending_per_employee == 3:
+            filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 10000]
+        elif selected_spending_per_employee == 4:
+            filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 50000]
+        
     
     # Filter DataFrame based on selected columns
     if selected_columns:
