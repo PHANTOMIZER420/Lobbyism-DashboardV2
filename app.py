@@ -101,10 +101,10 @@ app.layout = dbc.Container([
                 dcc.Dropdown(
                     id='average-employees-dropdown',
                     options=[
-                        {'label': '<1', 'value': 1},
-                        {'label': '<10', 'value': 2},
-                        {'label': '<50', 'value': 3},
-                        {'label': '<100', 'value': 4}
+                        {'label': '>1', 'value': 1},
+                        {'label': '>10', 'value': 2},
+                        {'label': '>50', 'value': 3},
+                        {'label': '>100', 'value': 4}
                     ],
                     clearable=True,
                     optionHeight=40,
@@ -118,10 +118,10 @@ app.layout = dbc.Container([
                 dcc.Dropdown(
                     id='average-spending-dropdown',
                     options=[
-                        {'label': '<5.000', 'value': 1},
-                        {'label': '<10.000', 'value': 2},
-                        {'label': '<50.000', 'value': 3},
-                        {'label': '<100.000', 'value': 4}
+                        {'label': '>5.000', 'value': 1},
+                        {'label': '>10.000', 'value': 2},
+                        {'label': '>50.000', 'value': 3},
+                        {'label': '>100.000', 'value': 4}
                     ],
                     clearable=True,
                     optionHeight=40,
@@ -135,10 +135,10 @@ app.layout = dbc.Container([
                 dcc.Dropdown(
                     id='spending-per-employee-dropdown',
                     options=[
-                        {'label': '<1.000', 'value': 1},
-                        {'label': '<10.000', 'value': 2},
-                        {'label': '<50.000', 'value': 3},
-                        {'label': '<100.000', 'value': 4}
+                        {'label': '>1.000', 'value': 1},
+                        {'label': '>10.000', 'value': 2},
+                        {'label': '>50.000', 'value': 3},
+                        {'label': '>100.000', 'value': 4}
                     ],
                     clearable=True,
                     optionHeight=40,
@@ -416,23 +416,23 @@ def update_table(page_current, page_size, sort_by, selected_columns, selected_ye
     if selected_employees:
         # Adjust these conditions based on your actual data and requirements
         if selected_employees == 1:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] < 1]
+            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 1]
         elif selected_employees == 2:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] < 10]
+            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 10]
         elif selected_employees == 3:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] < 50]
+            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 50]
         elif selected_employees == 4:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] < 100]
+            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 100]
     
     # Filter by average spending
     if selected_spending:
         # Adjust these conditions based on your actual data and requirements
         if selected_spending == 1:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] < 5000]
+            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 5000]
         elif selected_spending == 2:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] < 10000]
+            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 10000]
         elif selected_spending == 3:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] < 50000]
+            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 50000]
         # Add more conditions if there are more options
     
     # Filter DataFrame based on selected columns

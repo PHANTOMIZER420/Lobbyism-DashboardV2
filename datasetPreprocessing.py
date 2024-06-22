@@ -45,12 +45,12 @@ def preprocess_dataset(file_path):
     cDf[['GeschäftsjahrStart', 'GeschäftsjahrEnde']] = cDf['Geschäftsjahr'].apply(extract_dates)
 
     # Changing Columns to numeric values and converting to int
-    #cDf['lower_bound_amount'] = pd.to_numeric(cDf['lower_bound_amount'], errors='coerce').fillna(0).astype(int)
-    #cDf['upper_bound_amount'] = pd.to_numeric(cDf['upper_bound_amount'], errors='coerce').fillna(0).astype(int)
-    #cDf['lower_bound_emp'] = pd.to_numeric(cDf['lower_bound_emp'], errors='coerce').fillna(0).astype(int)
-    #cDf['upper_bound_emp'] = pd.to_numeric(cDf['upper_bound_emp'], errors='coerce').fillna(0).astype(int)
-    #cDf['Durchschnitt Betrag'] = pd.to_numeric(cDf['Durchschnitt Betrag'], errors='coerce').fillna(0).astype(int)
-    #cDf['Durchschnitt Beschäftigte'] = pd.to_numeric(cDf['Durchschnitt Beschäftigte'], errors='coerce').fillna(0).astype(int)
+    cDf['lower_bound_amount'] = pd.to_numeric(cDf['lower_bound_amount'], errors='coerce').fillna(0).astype(int)
+    cDf['upper_bound_amount'] = pd.to_numeric(cDf['upper_bound_amount'], errors='coerce').fillna(0).astype(int)
+    cDf['lower_bound_emp'] = pd.to_numeric(cDf['lower_bound_emp'], errors='coerce').fillna(0).astype(int)
+    cDf['upper_bound_emp'] = pd.to_numeric(cDf['upper_bound_emp'], errors='coerce').fillna(0).astype(int)
+    cDf['Durchschnitt Betrag'] = pd.to_numeric(cDf['Durchschnitt Betrag'], errors='coerce').fillna(0).astype(int)
+    cDf['Durchschnitt Beschäftigte'] = pd.to_numeric(cDf['Durchschnitt Beschäftigte'], errors='coerce').fillna(0).astype(int)
 
     cDf= cDf[((cDf['Durchschnitt Betrag'] > 5000) & (cDf['Durchschnitt Beschäftigte'] > 5)) | (cDf['Durchschnitt Betrag']/cDf['Durchschnitt Beschäftigte'] > 20000)].sort_values('Name')
 
