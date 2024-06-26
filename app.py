@@ -171,7 +171,7 @@ app.layout = dbc.Container([
                     clearable=True,
                     optionHeight=40,
                     className='customDropdown',
-                    style={'background-color': 'black'}
+                    style={'background-color': 'black', 'white-space': 'nowrap', 'text-overflow': 'ellipsis'}
                 )
             ])
         ], 
