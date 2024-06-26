@@ -60,4 +60,6 @@ def preprocess_dataset(file_path):
     # Filter out rows with unnecessary data
     cDf= cDf[((cDf['Durchschnitt Betrag'] > 5000) & (cDf['Durchschnitt Beschäftigte'] > 5)) | (cDf['Durchschnitt Beschäftigte'] > 1) & (cDf['Durchschnitt Betrag']/cDf['Durchschnitt Beschäftigte'] > 20000)].sort_values('Name')
 
+    cDf.rename(columns={'Durchschnitt Betrag': 'Ø Betrag', 'Durchschnitt Beschäftigte': 'Ø Beschäftigte'}, inplace=True)
+
     return cDf

@@ -60,7 +60,7 @@ app.layout = dbc.Container([
             # Info text
             html.P("This dashboard shows you some insights from the german parliament lobby register."
               )
-        ],style={"vertical-alignment": "top", "height": 300}),
+        ],style={"vertical-alignment": "top", "height": 270}),
         html.Div([
             html.Div(
                 # Radio buttons for tab selection
@@ -473,28 +473,28 @@ def update_table(page_current, page_size, sort_by, selected_columns, selected_ye
     # Filter by average employees
     if selected_employees:
         if selected_employees == 1:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 5]
+            filtered_df = filtered_df[filtered_df['Ø Beschäftigte'] > 5]
         elif selected_employees == 2:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 10]
+            filtered_df = filtered_df[filtered_df['Ø Beschäftigte'] > 10]
         elif selected_employees == 3:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 50]
+            filtered_df = filtered_df[filtered_df['Ø Beschäftigte'] > 50]
         elif selected_employees == 4:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Beschäftigte'] > 100]
+            filtered_df = filtered_df[filtered_df['Ø Beschäftigte'] > 100]
     
     # Filter by average spending
     if selected_spending:
         if selected_spending == 1:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 5000]
+            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 5000]
         elif selected_spending == 2:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 10000]
+            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 10000]
         elif selected_spending == 3:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 50000]
+            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 50000]
         elif selected_spending == 4:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 100000]
+            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 100000]
         elif selected_spending == 5:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 500000]
+            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 500000]
         elif selected_spending == 6:
-            filtered_df = filtered_df[filtered_df['Durchschnitt Betrag'] > 1000000]
+            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 1000000]
 
     # Filter by spending per employee
     if selected_spending_per_employee:
