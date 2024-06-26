@@ -3,7 +3,6 @@
 from dash import Dash, html, dcc, callback, Input, Output
 import dash_bootstrap_components as dbc
 import dash.dash_table as dash_table
-import dash_ag_grid as dag
 
 # Plotly
 import plotly.graph_objects as go
@@ -73,7 +72,7 @@ app.layout = dbc.Container([
                     options=[
                         {"label": "Insights", "value": 'INSIGHTS'},
                         {"label": "Explore", "value": 'EXPLORE'},
-                        {"label": "Cluster", "value": 'CLUSTER'}
+                        {"label": "Network", "value": 'NETWORK'}
                     ],
                     value='EXPLORE',
                     style={'width': '100%'}
@@ -292,16 +291,16 @@ app.layout = dbc.Container([
         }),
 
 
-    # -------------------------------------- Cluster Tab --------------------------------------
+    # -------------------------------------- Network Tab --------------------------------------
 
     html.Div([
         html.Div([
             # Title
-            html.H2('Cluster Analysis'),
+            html.H2('Network Analysis'),
             # Plot
             dcc.Graph(figure=fig)
         ],
-        id='cluster-tab',
+        id='network-tab',
         style={
             'display': 'none',
             'width': 'auto', 
@@ -389,17 +388,17 @@ def render_content(tab):
                 )
     
 
-# -------------------------------------- Cluster --------------------------------------
+# -------------------------------------- Network --------------------------------------
 
-# Define callback to toggle cluster tab visibility
+# Define callback to toggle network tab visibility
 @app.callback(
-    Output('cluster-tab', 'style'), # Show the explore tab      
+    Output('network-tab', 'style'), # Show the explore tab      
     Input('radio-button-group', 'value') # Radio button for selecting tabs
 )
    
-# Toggle cluster tab visibility
-def toggle_cluster_tab_visibility(selected_tab):
-    if selected_tab == 'CLUSTER':
+# Toggle network tab visibility
+def toggle_network_tab_visibility(selected_tab):
+    if selected_tab == 'NETWORK':
         return {'display': 'flex'}  # Change to 'flex' to make it visible
     else:
         return {'display': 'none'}  # Change to 'none' to hide it
