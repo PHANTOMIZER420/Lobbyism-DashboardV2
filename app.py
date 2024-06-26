@@ -160,6 +160,20 @@ app.layout = dbc.Container([
                     className='customDropdown',
                     style={'background-color': 'black'}
                 )
+            ]),
+            html.Div([
+                # Entity Dropdown
+                html.H2('Entity'),
+                dcc.Dropdown(
+                    id='entity-dropdown',
+                    options=[
+                        {'label': i, 'value': i} for i in sorted(cDf['Tätigkeit'].unique())
+                    ],
+                    clearable=True,
+                    optionHeight=40,
+                    className='customDropdown',
+                    style={'background-color': 'black'}
+                )
             ])
         ], 
         style={'margin-left': 15, 'margin-right': 15, 'margin-top': 30})
@@ -445,9 +459,10 @@ def update_table(page_current, page_size, sort_by, selected_columns):
     Input('fiscal-year-dropdown', 'value'),
     Input('average-employees-dropdown', 'value'),
     Input('average-spending-dropdown', 'value'),
-    Input('spending-per-employee-dropdown', 'value')] # Update table based on selected columns
+    Input('spending-per-employee-dropdown', 'value'),
+    Input('entity-dropdown', 'value')] # Update table based on selected columns
 )
-def update_table(page_current, page_size, sort_by, selected_columns, selected_year, selected_employees, selected_spending, selected_spending_per_employee):
+def update_table(page_current, page_size, sort_by, selected_columns, selected_year, selected_employees, selected_spending, selected_spending_per_employee, selected_entity):
     filtered_df = cDf.copy()  # Start with a copy of the original DataFrame to avoid modifying it directly
     
     # Filter by year
@@ -494,6 +509,13 @@ def update_table(page_current, page_size, sort_by, selected_columns, selected_ye
         elif selected_spending_per_employee == 5:
             filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 100000]
         
+
+    # Filter by selected entity
+    if selected_entity:
+        # Ensure selected_entity is treated as a list
+        entity_list = [selected_entity] if isinstance(selected_entity, str) else selected_entity
+        filtered_df = filtered_df[filtered_df['Tätigkeit'].isin(entity_list)]
+
     # Filter DataFrame based on selected columns
     if selected_columns:
         cDff = filtered_df[selected_columns]
