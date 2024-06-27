@@ -1,4 +1,4 @@
-# -------------------------------------- Import Libraries --------------------------------------
+# -------------------------------------- IMPORTS --------------------------------------
 # Dash
 from dash import Dash, html, dcc, callback, Input, Output
 import dash_bootstrap_components as dbc
@@ -19,7 +19,7 @@ from datasetPreprocessing import preprocess_dataset
 app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.FLATLY])
 
 
-# -------------------------------------- Data Preparation/Preprocessing --------------------------------------
+# -------------------------------------- DATA PREPROCESSING --------------------------------------
 
 file_path = '/Users/phantom/Documents/GitHub/Lobbyism-Dashboard/Datasets/Lobbyregister2024_full.csv'
 
@@ -29,6 +29,7 @@ oDf = pd.read_csv(file_path)
 # Set original/cleaned dataset index
 oDf[' index'] = range(1, len(oDf) + 1)
 
+# Preprocess the dataset
 cDf = preprocess_dataset(file_path)
 
 
@@ -50,7 +51,7 @@ fig.update_layout(plot_bgcolor='#010103', width=790, height=730,
 
 # Create a Dash container
 app.layout = dbc.Container([
-    # -------------------------------------- Layout Tabs & Dropdown Filters --------------------------------------
+    # -------------------------------------- NAVIGATION & FILTERS --------------------------------------
 
     html.Div([
         html.Div([
@@ -175,7 +176,8 @@ app.layout = dbc.Container([
                 )
             ])
         ], 
-        style={'margin-left': 15, 'margin-right': 15, 'margin-top': 30})
+        id='filter-section',
+        ),
     ], 
     style={'width': 340, 'margin-left': 25, 'margin-top': 25, 'margin-bottom': 25}),
 
@@ -317,7 +319,8 @@ app.layout = dbc.Container([
     className='dashboard-container')
 
 
-#-------------------------------------- Callbacks -------------------------------------
+
+#-------------------------------------- CALLBACKS -------------------------------------
 
 # -------------------------------------- Insights --------------------------------------
 
@@ -339,16 +342,17 @@ def toggle_insights_tab_visibility(selected_tab):
 
 # Define callback to toggle explore tab visibility
 @app.callback(
-    Output('explore-tab', 'style'), # Show the explore tab      
-    Input('radio-button-group', 'value') # Radio button for selecting tabs
+    [Output('explore-tab', 'style'), # Show the explore tab
+    Output('filter-section', 'style')], # Show the filter section      
+    [Input('radio-button-group', 'value')] # Radio button for selecting tabs
 )
    
 # Toggle explore tab visibility
 def toggle_explore_tab_visibility(selected_tab):
     if selected_tab == 'EXPLORE':
-        return {'display': 'flex'} # Change to 'flex' to make it visible
+        return ({'display': 'flex'}, {'display': 'block', 'margin-right': '20px', 'margin-top': '30px'}) # Change to 'flex' to make it visible
     else:
-        return {'display': 'none'} # Change to 'none' to hide it
+        return ({'display': 'none'}, {'display': 'none'}) # Change to 'none' to hide it
     
 # Table Tabs 
 
@@ -392,7 +396,7 @@ def render_content(tab):
 
 # Define callback to toggle network tab visibility
 @app.callback(
-    Output('network-tab', 'style'), # Show the explore tab      
+    Output('network-tab', 'style'), # Show the network tab      
     Input('radio-button-group', 'value') # Radio button for selecting tabs
 )
    
