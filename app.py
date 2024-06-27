@@ -206,7 +206,7 @@ app.layout = dbc.Container([
 
     html.Div([
         html.Div([ 
-            html.H2('Selected Original Dataset Columns:'),
+            html.H2('Column Filter:'),
                 # Dropdown for column filtering
                 dcc.Dropdown(
                     id='column-dropdown-filter-original',
@@ -221,9 +221,8 @@ app.layout = dbc.Container([
                            oDf.columns[5]],  # Interests]
                     optionHeight=40,
                     className='customDropdown',
-                    style={'margin-bottom': 10, 'background-color': 'black'}
+                    style={'display':'none', 'background-color': 'black'}
                 ),
-                html.H2('Selected Cleaned Dataset Columns:'),
                 dcc.Dropdown(
                     id='column-dropdown-filter-cleaned',
                     options=[{'label': col, 'value': col} for col in sorted(cDf.columns)],
@@ -231,11 +230,11 @@ app.layout = dbc.Container([
                     multi=True,
                     value=[cDf.columns[0],   # Name
                            cDf.columns[18],  # AVG Spending
-                           cDf.columns[21],   # Fiscal Year
-                           cDf.columns[4]],   # Entity
+                           cDf.columns[21],  # Fiscal Year
+                           cDf.columns[4]],  # Entity
                     optionHeight=40,
                     className='customDropdown',
-                    style={'margin-bottom': 25, 'background-color': 'black'}
+                    style={'display':'none', 'background-color': 'black'}
                 ),
                 # Tabs for switching tables
                 html.Div([
@@ -281,7 +280,7 @@ app.layout = dbc.Container([
                 # Display data tables
                 ],
                 # Style for the tables
-                style={'width': 990, 'margin-top': 25, 'margin-bottom': 25}),
+                style={'width': 990, 'margin-top': 80}),
         ],
         id='explore-tab',
         style={
@@ -357,7 +356,9 @@ def toggle_explore_tab_visibility(selected_tab):
 # Table Tabs 
 
 @app.callback(
-    Output('table-tabs-content', 'children'),
+    [Output('table-tabs-content', 'children'),
+     Output('column-dropdown-filter-cleaned', 'style'),
+     Output('column-dropdown-filter-original', 'style')],
     [Input('table-tabs', 'value')]
 )
 
@@ -367,7 +368,7 @@ def render_content(tab):
                     id='cleaned-data-table',
                     columns=[{'name': i, 'id': i, 'deletable': True} for i in sorted(cDf.columns)],
                     page_current=0,
-                    page_size=15,
+                    page_size=16,
                     page_action='custom',
                     sort_action='custom',
                     sort_mode='single',
@@ -375,13 +376,13 @@ def render_content(tab):
                     style_table={'overflowX': 'auto', 'overflowY': 'auto'},
                     style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
                     style_cell={'backgroundColor': 'black','color': 'white','textAlign': 'left', 'fontFamily': 'sans-serif'},
-                )
+                ), {'display':'block', 'background-color': 'black'}, {'display':'none', 'background-color': 'black'}
     elif tab == 'original-tab':
         return dash_table.DataTable(
                     id='original-data-table',
                     columns=[{'name': i, 'id': i, 'deletable': True} for i in sorted(oDf.columns)],
                     page_current=0,
-                    page_size=15,
+                    page_size=16,
                     page_action='custom',
                     sort_action='custom',
                     sort_mode='single',
@@ -389,7 +390,7 @@ def render_content(tab):
                     style_table={'overflowX': 'auto', 'overflowY': 'auto'},
                     style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
                     style_cell={'backgroundColor': 'black','color': 'white','textAlign': 'left', 'fontFamily': 'sans-serif'},
-                )
+                ), {'display':'none', 'background-color': 'black'}, {'display':'block', 'background-color': 'black'}
     
 
 # -------------------------------------- Network --------------------------------------
