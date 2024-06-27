@@ -1,6 +1,6 @@
 # -------------------------------------- IMPORTS --------------------------------------
 # Dash
-from dash import Dash, html, dcc, callback, Input, Output
+from dash import Dash, html, dcc, callback, Input, Output, State
 import dash_bootstrap_components as dbc
 import dash.dash_table as dash_table
 
@@ -82,11 +82,16 @@ app.layout = dbc.Container([
             ),
             html.Div(
                 # About button
-                dbc.Button(
-                    "About",
-                    className="btn btn-info",
-                    n_clicks=0
-                ), style={'width': 104})
+                dbc.Button("About", id="open-about-modal", className="btn btn-info", n_clicks=0), 
+                style={'width': 104}),
+                dbc.Modal([
+                dbc.ModalHeader(dbc.ModalTitle("About Our Project")),
+                dbc.ModalBody("This is some background information about our project..."),
+                dbc.ModalFooter([
+                    html.A("GIT", href="https://github.com/PHANTOMIZER420/Lobbyism-DashboardV2", className="btn btn-primary"),
+                dbc.Button("Close", id="close-about-modal", className="ms-auto", n_clicks=0)
+                ]),
+    ], id="about-modal", is_open=False),  # Initially hidden
         ], style={'margin-left': 15, 'margin-right': 15, 'display': 'flex'}),
         html.Div([
             # Dropdowns section for filtering
@@ -544,6 +549,19 @@ def update_table(page_current, page_size, sort_by, selected_columns, selected_ye
     
     # Return data and columns
     return cDff.to_dict('records'), columns
+
+
+# -------------------------------------- About Modal --------------------------------------
+@app.callback(
+    Output("about-modal", "is_open"),
+    [Input("open-about-modal", "n_clicks"), 
+     Input("close-about-modal", "n_clicks")],
+    [State("about-modal", "is_open")],
+)
+def toggle_modal(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
 
 
 # -------------------------------------- Run the app --------------------------------------
