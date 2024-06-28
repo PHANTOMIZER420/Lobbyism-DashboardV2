@@ -8,14 +8,24 @@ import dash.dash_table as dash_table
 # Plotly
 import plotly.graph_objects as go
 import plotly.express as px
+import matplotlib.pyplot as plt
+
+# Networkx
+import networkx as nx 
 
 # Numpy, Pandas, Random
 import numpy as np
 import pandas as pd
 import random
 
+# Import graph network function 
+from graphNetwork import createNetwork, plotlyNetwork
+
 # Import dataset preprocessing function
 from datasetPreprocessingExplore import preprocess_dataset
+
+# Import dashboard preprocessing function
+
 
 # -------------------------------------- APP SETUP --------------------------------------
 
@@ -30,7 +40,7 @@ file_path = '/Users/phantom/Documents/GitHub/Lobbyism-Dashboard/Datasets/Lobbyre
 # Load original dataset 
 oDf = pd.read_csv(file_path)
 
-# Set original/cleaned dataset index
+# Set original dataset index
 oDf[' index'] = range(1, len(oDf) + 1)
 
 # Preprocess the dataset
@@ -64,6 +74,11 @@ fig.update_layout(plot_bgcolor='#010103', width=380, height=380,
 figX.update_layout(plot_bgcolor='#010103', width=500, height=760,
                   xaxis_visible=False, yaxis_visible=False, showlegend=False, margin=dict(l=0,r=0,t=0,b=0))
 
+# -------------------------------------- Network Plot --------------------------------------
+
+# Create network
+netGraph = createNetwork(cDf)
+netFigure = plotlyNetwork(netGraph)
 
 # Create a Dash container
 app.layout = dbc.Container([
@@ -237,7 +252,7 @@ app.layout = dbc.Container([
 
     # -------------------------------------- Insights Tab --------------------------------------
 
-    # Insigths scrollable container
+    # Insigths container
     html.Div([
         # Vertical 
         html.Div([
@@ -271,11 +286,12 @@ app.layout = dbc.Container([
 
 
     # -------------------------------------- Explore Tab --------------------------------------
-
+    # Explore Tab container
     html.Div([
         html.Div([ 
             html.H2('Column Filter:'),
-                # Dropdown for column filtering
+                # Column filtering
+                # Original Dataset Dropdown
                 dcc.Dropdown(
                     id='column-dropdown-filter-original',
                     options=[{'label': col, 'value': col} for col in sorted(oDf.columns)],
@@ -291,6 +307,7 @@ app.layout = dbc.Container([
                     className='customDropdown',
                     style={'display':'none', 'background-color': 'black'}
                 ),
+                # Clean Dataset Dropdown
                 dcc.Dropdown(
                     id='column-dropdown-filter-cleaned',
                     options=[{'label': col, 'value': col} for col in sorted(cDf.columns)],
@@ -366,9 +383,8 @@ app.layout = dbc.Container([
     html.Div([
         html.Div([
             # Title
-            html.H2('Network Analysis'),
-            # Plot
-            dcc.Graph(figure=figX)
+                html.H2('Network Analysis'),
+                dcc.Graph(figure=netFigure), 
         ],
         id='network-tab',
         style={
