@@ -15,7 +15,7 @@ import pandas as pd
 import random
 
 # Import dataset preprocessing function
-from datasetPreprocessing import preprocess_dataset
+from datasetPreprocessingExplore import preprocess_dataset
 
 # -------------------------------------- APP SETUP --------------------------------------
 
@@ -220,7 +220,7 @@ app.layout = dbc.Container([
                 dcc.Dropdown(
                     id='entity-dropdown',
                     options=[
-                        {'label': i, 'value': i} for i in sorted(cDf['Tätigkeit'].unique())
+                        {'label': i, 'value': i} for i in sorted(cDf['Entity'].unique())
                     ],
                     clearable=True,
                     optionHeight=40,
@@ -541,53 +541,53 @@ def update_table(page_current, page_size, sort_by, selected_columns, selected_ye
     # Filter by year
     if selected_year:
         year_mapping = {1: 2021, 2: 2022, 3: 2023}
-        filtered_df = filtered_df[filtered_df['GeschäftsjahrStart'].dt.year == year_mapping[selected_year]]
+        filtered_df = filtered_df[filtered_df['Fiscal Year Start'].dt.year == year_mapping[selected_year]]
     
     # Filter by average employees
     if selected_employees:
         if selected_employees == 1:
-            filtered_df = filtered_df[filtered_df['Ø Beschäftigte'] > 5]
+            filtered_df = filtered_df[filtered_df['Ø Employees'] > 5]
         elif selected_employees == 2:
-            filtered_df = filtered_df[filtered_df['Ø Beschäftigte'] > 10]
+            filtered_df = filtered_df[filtered_df['Ø Employees'] > 10]
         elif selected_employees == 3:
-            filtered_df = filtered_df[filtered_df['Ø Beschäftigte'] > 50]
+            filtered_df = filtered_df[filtered_df['Ø Employees'] > 50]
         elif selected_employees == 4:
-            filtered_df = filtered_df[filtered_df['Ø Beschäftigte'] > 100]
+            filtered_df = filtered_df[filtered_df['Ø Employees'] > 100]
     
     # Filter by average spending
     if selected_spending:
         if selected_spending == 1:
-            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 5000]
+            filtered_df = filtered_df[filtered_df['Ø Amount'] > 5000]
         elif selected_spending == 2:
-            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 10000]
+            filtered_df = filtered_df[filtered_df['Ø Amount'] > 10000]
         elif selected_spending == 3:
-            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 50000]
+            filtered_df = filtered_df[filtered_df['Ø Amount'] > 50000]
         elif selected_spending == 4:
-            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 100000]
+            filtered_df = filtered_df[filtered_df['Ø Amount'] > 100000]
         elif selected_spending == 5:
-            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 500000]
+            filtered_df = filtered_df[filtered_df['Ø Amount'] > 500000]
         elif selected_spending == 6:
-            filtered_df = filtered_df[filtered_df['Ø Betrag'] > 1000000]
+            filtered_df = filtered_df[filtered_df['Ø Amount'] > 1000000]
 
     # Filter by spending per employee
     if selected_spending_per_employee:
         if selected_spending_per_employee == 1:
-            filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 1000]
+            filtered_df = filtered_df[filtered_df['Ø Amount/Employee'] > 1000]
         elif selected_spending_per_employee == 2:
-            filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 5000]
+            filtered_df = filtered_df[filtered_df['Ø Amount/Employee'] > 5000]
         elif selected_spending_per_employee == 3:
-            filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 10000]
+            filtered_df = filtered_df[filtered_df['Ø Amount/Employee'] > 10000]
         elif selected_spending_per_employee == 4:
-            filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 50000]
+            filtered_df = filtered_df[filtered_df['Ø Amount/Employee'] > 50000]
         elif selected_spending_per_employee == 5:
-            filtered_df = filtered_df[filtered_df['Betrag / Beschäftigte'] > 100000]
+            filtered_df = filtered_df[filtered_df['Ø Amount/Employee'] > 100000]
         
 
     # Filter by selected entity
     if selected_entity:
         # Ensure selected_entity is treated as a list
         entity_list = [selected_entity] if isinstance(selected_entity, str) else selected_entity
-        filtered_df = filtered_df[filtered_df['Tätigkeit'].isin(entity_list)]
+        filtered_df = filtered_df[filtered_df['Entity'].isin(entity_list)]
 
     # Filter DataFrame based on selected columns
     if selected_columns:
