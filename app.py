@@ -96,8 +96,7 @@ app.layout = dbc.Container([
             # Title
             html.H1([ html.Span("Lobbyism"), html.Br(),html.Span("in Germany")]),
             # Info text
-            html.P("This dashboard shows you some insights from the german parliament lobby register."
-              )
+            html.P("This dashboard shows you some insights from the german parliament lobby register.")
         ],style={"vertical-alignment": "top", "height": 270}),
 
         # Tab selection
@@ -115,7 +114,7 @@ app.layout = dbc.Container([
                         {"label": "Explore", "value": 'EXPLORE'},
                         {"label": "Network", "value": 'NETWORK'}
                     ],
-                    value='INSIGHTS',
+                    value='EXPLORE',
                     style={'width': '100%'}
                 ), 
                 style={'width': 312}
@@ -147,9 +146,9 @@ app.layout = dbc.Container([
                 dcc.Dropdown(
                     id='insights-chapter-dropdown',
                     options=[
-                        {'label': '1: ...', 'value': 1},
-                        {'label': '2: ...', 'value': 2},
-                        {'label': '3: ...', 'value': 3}
+                        {'label': 'Interests', 'value': 1},
+                        {'label': 'Spending', 'value': 2},
+                        {'label': 'Entities', 'value': 3}
                     ],
                     clearable=True,
                     optionHeight=40,
@@ -477,7 +476,6 @@ def render_content(tab):
                     style_cell={'backgroundColor': 'black','color': 'white','textAlign': 'left', 'fontFamily': 'sans-serif'},
                 ), {'display':'none', 'background-color': 'black'}, {'display':'block', 'background-color': 'black'}
     
-
 # -------------------------------------- Network --------------------------------------
 
 # Define callback to toggle network tab visibility
@@ -648,4 +646,4 @@ def toggle_modal(n1, n2, is_open):
 
 # Run the app on port 8050
 if __name__ == "__main__":
-    app.run_server(debug=True, port=8050)
+    app.run_server(debug=True, host="0.0.0.0", port=8050)
