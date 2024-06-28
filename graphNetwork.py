@@ -13,21 +13,21 @@ def createNetwork(cDf) :
         # Assuming 'Entity' is a column in your DataFrame for node names
         # Add or update node for EntityA
         if not G.has_node(row['Entity']):
-            G.add_node(row['Entity'], amount=row['Ø Amount'], employees=row['Ø Employees'])
+            G.add_node(row['Entity'])
         else:
             # Update node attributes if necessary
             pass
 
         # Add or update node for EntityB
-        if not G.has_node(row['Fiscal Year Start']):
-            G.add_node(row['Fiscal Year Start'], amount=row['Ø Amount'], employees=row['Ø Employees'])
+        if not G.has_node(row['Interests']):
+            G.add_node(row['Interests'])
         else:
             # Update node attributes if necessary
             pass
 
         # Add edges between EntityA and EntityB
         # This assumes each row in your DataFrame represents a relationship between EntityA and EntityB
-        G.add_edge(row['Entity'], row['Fiscal Year Start'])
+        G.add_edge(row['Entity'], row['Interests'])
 
     return G
 
@@ -44,7 +44,7 @@ def plotlyNetwork(G):
 
     edge_trace = go.Scatter(
         x=edge_x, y=edge_y,
-        line=dict(width=0.5, color='red'),
+        line=dict(width=0.5, color='blue'),
         hoverinfo='none',
         mode='lines')
 
@@ -79,7 +79,9 @@ def plotlyNetwork(G):
                     layout=go.Layout(
                         showlegend=False,
                         hovermode='closest',
-                        margin=dict(b=0, l=0, r=0, t=0),
+                        margin=dict(b=0, l=0, r=1, t=0),
+                        width=900, 
+                        height=900,
                         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
                         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
                     )

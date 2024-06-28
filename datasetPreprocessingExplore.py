@@ -67,7 +67,8 @@ def preprocess_dataset(file_path):
                         'GeschäftsjahrStart': 'Fiscal Year Start',
                         'GeschäftsjahrEnde': 'Fiscal Year End',
                         'Geschäftsjahr': 'Fiscal Year',
-                        'Tätigkeit': 'Entity'},
+                        'Tätigkeit': 'Entity',
+                        'Interessen': 'Interests'}, 
                         inplace=True)
 
     return cDf

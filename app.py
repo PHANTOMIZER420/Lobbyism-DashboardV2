@@ -80,6 +80,12 @@ figX.update_layout(plot_bgcolor='#010103', width=500, height=760,
 netGraph = createNetwork(cDf)
 netFigure = plotlyNetwork(netGraph)
 
+netFigure.update_layout(
+    plot_bgcolor='black',  # Sets the plot background color to black
+    paper_bgcolor='black',  # Sets the background color of the entire figure to black
+    font=dict(color='white')  # Optional: Changes the font color to white for better contrast
+)
+
 # Create a Dash container
 app.layout = dbc.Container([
     # -------------------------------------- NAVIGATION & FILTERS --------------------------------------
@@ -252,24 +258,18 @@ app.layout = dbc.Container([
 
     # -------------------------------------- Insights Tab --------------------------------------
 
-    # Insigths container
+    # Insights container
     html.Div([
-        # Vertical 
-        html.Div([
-            html.Div(
-                dcc.Graph(figure=fig),
+
+        html.Div(
+        [
+            dbc.Col(
+            [
+                dbc.Row(html.Div(dcc.Graph(figure=fig))),
+                dbc.Row(html.Div(dcc.Graph(figure=fig))),
+            ]
             ),
-            html.Div(
-                dcc.Graph(figure=fig),
-            ),
-        ],
-        style={'display': 'inline-block'}
-        ),
-        #Horizontal
-        html.Div([
-            html.Div(
-                dcc.Graph(figure=figX),
-            ),
+            dbc.Col(html.Div(dcc.Graph(figure=figX))),
         ],
         style={'display': 'flex'}
         ),
