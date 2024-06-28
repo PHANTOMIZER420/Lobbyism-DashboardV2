@@ -85,5 +85,5 @@ def plotlyNetwork(G):
                         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
                         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
                     )
-
+    
     return fig
