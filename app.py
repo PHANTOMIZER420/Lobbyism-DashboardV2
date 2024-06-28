@@ -1,4 +1,5 @@
 # -------------------------------------- IMPORTS --------------------------------------
+
 # Dash
 from dash import Dash, html, dcc, callback, Input, Output, State
 import dash_bootstrap_components as dbc
@@ -6,6 +7,7 @@ import dash.dash_table as dash_table
 
 # Plotly
 import plotly.graph_objects as go
+import plotly.express as px
 
 # Numpy, Pandas, Random
 import numpy as np
@@ -14,6 +16,8 @@ import random
 
 # Import dataset preprocessing function
 from datasetPreprocessing import preprocess_dataset
+
+# -------------------------------------- APP SETUP --------------------------------------
 
 # Create a Dash app
 app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.FLATLY])
@@ -32,28 +36,41 @@ oDf[' index'] = range(1, len(oDf) + 1)
 # Preprocess the dataset
 cDf = preprocess_dataset(file_path)
 
-
-# -------------------------------------- Plot --------------------------------------
+# -------------------------------------- PLOTS --------------------------------------
 
 # Create an example plot
 fig = go.Figure(
     go.Scattergl(
-        x = np.random.randn(500),
-        y = np.random.randn(500),
+        x = np.random.randn(100),
+        y = np.random.randn(100),
+        mode='markers',
+        marker=dict(color=random.sample(['#ecf0f1']*500 + ["#3498db"]*500, 1000), line_width=1)
+    )
+)
+figX = go.Figure(
+    go.Scattergl(
+        x = np.random.randn(100),
+        y = np.random.randn(100),
         mode='markers',
         marker=dict(color=random.sample(['#ecf0f1']*500 + ["#3498db"]*500, 1000), line_width=1)
     )
 )
 
 # Update the layout of the plot
-fig.update_layout(plot_bgcolor='#010103', width=790, height=730,
+fig.update_layout(plot_bgcolor='#010103', width=380, height=380,
                   xaxis_visible=False, yaxis_visible=False, showlegend=False, margin=dict(l=0,r=0,t=0,b=0))
+
+# Update the layout of the plot
+figX.update_layout(plot_bgcolor='#010103', width=500, height=760,
+                  xaxis_visible=False, yaxis_visible=False, showlegend=False, margin=dict(l=0,r=0,t=0,b=0))
+
 
 # Create a Dash container
 app.layout = dbc.Container([
     # -------------------------------------- NAVIGATION & FILTERS --------------------------------------
 
     html.Div([
+        # Title & Info
         html.Div([
             # Title
             html.H1([ html.Span("Lobbyism"), html.Br(),html.Span("in Germany")]),
@@ -61,9 +78,11 @@ app.layout = dbc.Container([
             html.P("This dashboard shows you some insights from the german parliament lobby register."
               )
         ],style={"vertical-alignment": "top", "height": 270}),
+
+        # Tab selection
         html.Div([
+            #Radiobuttons
             html.Div(
-                # Radio buttons for tab selection
                 dbc.RadioItems(
                     id='radio-button-group',
                     className='btn-group',
@@ -75,29 +94,57 @@ app.layout = dbc.Container([
                         {"label": "Explore", "value": 'EXPLORE'},
                         {"label": "Network", "value": 'NETWORK'}
                     ],
-                    value='EXPLORE',
+                    value='INSIGHTS',
                     style={'width': '100%'}
                 ), 
                 style={'width': 312}
             ),
+            #About button
             html.Div(
-                # About button
+                # Button
                 dbc.Button("About", id="open-about-modal", className="btn btn-info", n_clicks=0), 
                 style={'width': 104}),
+                # About Modal
                 dbc.Modal([
-                dbc.ModalHeader(dbc.ModalTitle("About Our Project")),
-                dbc.ModalBody("This is some background information about our project..."),
-                dbc.ModalFooter([
-                    html.A("GIT", href="https://github.com/PHANTOMIZER420/Lobbyism-DashboardV2", className="btn btn-primary"),
-                dbc.Button("Close", id="close-about-modal", className="ms-auto", n_clicks=0)
-                ]),
-    ], id="about-modal", is_open=False),  # Initially hidden
-        ], style={'margin-left': 15, 'margin-right': 15, 'display': 'flex'}),
+                    dbc.ModalHeader(dbc.ModalTitle("About")),
+                    dbc.ModalBody("..."),
+                    dbc.ModalFooter([
+                        html.A("GIT", href="https://github.com/PHANTOMIZER420/Lobbyism-DashboardV2", className="btn btn-primary"),
+                    dbc.Button("Close", id="close-about-modal", className="ms-auto", n_clicks=0)
+                    ]),
+                ], id="about-modal", is_open=False),  # Initially hidden
+        ], 
+        style={'display': 'flex'}),
+
+        # -------------------------------------- Filter Section --------------------------------------
+
+        # Filter section for insights
         html.Div([
-            # Dropdowns section for filtering
-            html.H2(html.Span("Filter for Cleaned Dataset:")),
+
+            # Chapter selection dropdown
             html.Div([
-                # Fiscal Year Dropdown
+                dcc.Dropdown(
+                    id='insights-chapter-dropdown',
+                    options=[
+                        {'label': '1: ...', 'value': 1},
+                        {'label': '2: ...', 'value': 2},
+                        {'label': '3: ...', 'value': 3}
+                    ],
+                    clearable=True,
+                    optionHeight=40,
+                    className='customDropdown',
+                    style={'background-color': 'black'}
+                )
+            ])
+        ],
+        id='filter-section-insigths'
+        ),
+
+        # Filter section explore
+        html.Div([
+
+            # Fiscal Year Dropdown
+            html.Div([
                 html.H2('Fiscal Year:'),
                 dcc.Dropdown(
                     id='fiscal-year-dropdown',
@@ -112,8 +159,9 @@ app.layout = dbc.Container([
                     style={'background-color': 'black'}
                 )
             ]),
+
+            # Employee Dropdown
             html.Div([
-                # Employee Dropdown
                 html.H2('Average Employees:'),
                 dcc.Dropdown(
                     id='average-employees-dropdown',
@@ -129,8 +177,8 @@ app.layout = dbc.Container([
                     style={'background-color': 'black'}
                 )
             ]),
+            # Spending Dropdown
             html.Div([
-                # Spending Dropdown
                 html.H2('Average Spending:'),
                 dcc.Dropdown(
                     id='average-spending-dropdown',
@@ -148,8 +196,8 @@ app.layout = dbc.Container([
                     style={'background-color': 'black'}
                 )
             ]),
+            # Spending/Employee Dropdown
             html.Div([
-                # Spending/Employee Dropdown
                 html.H2('Spending/Employee:'),
                 dcc.Dropdown(
                     id='spending-per-employee-dropdown',
@@ -166,8 +214,8 @@ app.layout = dbc.Container([
                     style={'background-color': 'black'}
                 )
             ]),
+            # Entity Dropdown
             html.Div([
-                # Entity Dropdown
                 html.H2('Entity'),
                 dcc.Dropdown(
                     id='entity-dropdown',
@@ -181,30 +229,45 @@ app.layout = dbc.Container([
                 )
             ])
         ], 
-        id='filter-section',
+        id='filter-section-explore',
         ),
     ], 
-    style={'width': 340, 'margin-left': 25, 'margin-top': 25, 'margin-bottom': 25}),
+    style={'width': 340, 'margin-top': 50, 'margin-right': 5, 'margin-left': 15}),
 
 
     # -------------------------------------- Insights Tab --------------------------------------
 
+    # Insigths scrollable container
     html.Div([
+        # Vertical 
         html.Div([
-            # Title
-            html.H2('Insights'),
-            # Plot
-            dcc.Graph(figure=fig)
+            html.Div(
+                dcc.Graph(figure=fig),
+            ),
+            html.Div(
+                dcc.Graph(figure=fig),
+            ),
         ],
-        id='insights-tab',
-        style={
+        style={'display': 'inline-block'}
+        ),
+        #Horizontal
+        html.Div([
+            html.Div(
+                dcc.Graph(figure=figX),
+            ),
+        ],
+        style={'display': 'flex'}
+        ),
+    ],
+    id='insights-tab',
+    style={
             'display': 'none',
             'width': 'auto', 
             'margin-top': 50,
             'margin-right': 25,
             'margin-bottom': 25,
-        })
-    ]),
+        }
+    ),
 
 
     # -------------------------------------- Explore Tab --------------------------------------
@@ -281,11 +344,12 @@ app.layout = dbc.Container([
                             )
                 ]),
                 html.Div(id='table-tabs-content')
-                ]),
+                ],
+                style={'margin-top': 15}),
                 # Display data tables
                 ],
                 # Style for the tables
-                style={'width': 990, 'margin-top': 80}),
+                style={'width': 990, 'margin-top': 63}),
         ],
         id='explore-tab',
         style={
@@ -304,7 +368,7 @@ app.layout = dbc.Container([
             # Title
             html.H2('Network Analysis'),
             # Plot
-            dcc.Graph(figure=fig)
+            dcc.Graph(figure=figX)
         ],
         id='network-tab',
         style={
@@ -323,23 +387,23 @@ app.layout = dbc.Container([
     className='dashboard-container')
 
 
-
 #-------------------------------------- CALLBACKS -------------------------------------
 
 # -------------------------------------- Insights --------------------------------------
 
 # Define callback to toggle insights tab visibility
 @app.callback(
-    Output('insights-tab', 'style'), # Show the insights
-    Input('radio-button-group', 'value') # Radio button for selecting tabs
+    [Output('insights-tab', 'style'), # Show the insights
+     Output('insights-chapter-dropdown', 'style')], #Show the insights filter
+    [Input('radio-button-group', 'value')] # Radio button for selecting tabs
 )
    
 # Toggle insights tab visibility
 def toggle_insights_tab_visibility(selected_tab):
     if selected_tab == 'INSIGHTS':
-        return {'display': 'flex'}  # Change to 'flex' to make it visible
+        return ({'display': 'flex'}, {'display': 'block', 'margin-top':'30px', 'background':'black'})  # Change to 'flex' to make it visible
     else:
-        return {'display': 'none'}  # Change to 'none' to hide it
+        return ({'display': 'none'}, {'display': 'none'})  # Change to 'none' to hide it
     
 
 # -------------------------------------- Explore --------------------------------------    
@@ -347,14 +411,14 @@ def toggle_insights_tab_visibility(selected_tab):
 # Define callback to toggle explore tab visibility
 @app.callback(
     [Output('explore-tab', 'style'), # Show the explore tab
-    Output('filter-section', 'style')], # Show the filter section      
+    Output('filter-section-explore', 'style')], # Show the filter section      
     [Input('radio-button-group', 'value')] # Radio button for selecting tabs
 )
    
 # Toggle explore tab visibility
 def toggle_explore_tab_visibility(selected_tab):
     if selected_tab == 'EXPLORE':
-        return ({'display': 'flex'}, {'display': 'block', 'margin-right': '20px', 'margin-top': '30px'}) # Change to 'flex' to make it visible
+        return ({'display': 'flex'}, {'display': 'block', 'margin-right': '20px', 'margin-top': '30px', 'background':'black'}) # Change to 'flex' to make it visible
     else:
         return ({'display': 'none'}, {'display': 'none'}) # Change to 'none' to hide it
     
