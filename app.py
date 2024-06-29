@@ -25,7 +25,7 @@ from graphNetwork import createNetwork, plotlyNetwork
 from datasetPreprocessingExplore import preprocess_dataset
 
 # Import dashboard preprocessing function
-from datasetPreprocessingInsights import createFigUniqueInterests, createFigAverageInterests
+from datasetPreprocessingInsights import createFigUniqueInterests, createFigAverageInterests, createFigBiggestInterestAreas
 
 # -------------------------------------- APP SETUP --------------------------------------
 
@@ -96,6 +96,9 @@ figUniqueInterests = createFigUniqueInterests()
 # Plot 2
 figAverageInterests = createFigAverageInterests()
 
+# Plot 3
+figBiggestInterestAreas = createFigBiggestInterestAreas()
+
 
 
 # Create a Dash container
@@ -126,7 +129,7 @@ app.layout = dbc.Container([
                         {"label": "Explore", "value": 'EXPLORE'},
                         {"label": "Network", "value": 'NETWORK'}
                     ],
-                    value='EXPLORE',
+                    value='INSIGHTS',
                     style={'width': '100%'}
                 ), 
                 style={'width': 312}
@@ -288,7 +291,7 @@ app.layout = dbc.Container([
                 dbc.Row(
                     html.Div(
                         #
-                        dcc.Graph(figure=fig)
+                        dcc.Graph(figure=figBiggestInterestAreas)
                     )
                 ),
             ]
