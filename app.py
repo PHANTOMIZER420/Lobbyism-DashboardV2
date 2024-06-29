@@ -117,10 +117,14 @@ figSpendingPerEmployee = datasetPreprocessingInsights.createFigSpendingsPerEmplo
 # Entities
 
 # Plot 1
+figNumberOfEntities = datasetPreprocessingInsights.createFigNumberOfEntities()
 
 # Plot 2
+figAverageEmployees = datasetPreprocessingInsights.createFigAverageEmployees()
 
 # Plot 3
+figInterestsPerEntity = datasetPreprocessingInsights.createFigInterestPerEntity()
+
 
 
 
@@ -341,14 +345,14 @@ app.layout = dbc.Container([
                 #First Row
                 dbc.Row(
                     html.Div(
-                        #Spenings Pie
+                        #Spendings per employee
                         dcc.Graph(figure=figSpendingPerEmployee)
                     )
                 ),
                 #Second Row
                 dbc.Row(
                     html.Div(
-                        #
+                        #Sepndings Scatter
                         dcc.Graph(figure=figSpendingsScatter)
                     )
                 ),
@@ -357,7 +361,7 @@ app.layout = dbc.Container([
             #Right Column
             dbc.Col(
                 html.Div(
-                    #Unique Interests 
+                    #Spendings Pie 
                     dcc.Graph(figure=figSpendingsPie)
                 )
             ),
@@ -374,15 +378,15 @@ app.layout = dbc.Container([
                 #First Row
                 dbc.Row(
                     html.Div(
-                        #Mean Interests
-                        #dcc.Graph(figure=figAverageInterests)
+                        #Number of entities
+                        dcc.Graph(figure=figNumberOfEntities)
                     )
                 ),
                 #Second Row
                 dbc.Row(
                     html.Div(
                         #
-                        #dcc.Graph(figure=figBiggestInterestAreas)
+                        dcc.Graph(figure=figAverageEmployees)
                     )
                 ),
             ]
@@ -391,7 +395,7 @@ app.layout = dbc.Container([
             dbc.Col(
                 html.Div(
                     #Unique Interests 
-                    #dcc.Graph(figure=figUniqueInterests)
+                    dcc.Graph(figure=figInterestsPerEntity)
                 )
             ),
         ],
