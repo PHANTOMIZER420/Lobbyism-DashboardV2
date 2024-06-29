@@ -80,8 +80,8 @@ def plotlyNetwork(G):
                         showlegend=False,
                         hovermode='closest',
                         margin=dict(b=0, l=0, r=1, t=0),
-                        width=800, 
-                        height=800,
+                        width=700, 
+                        height=700,
                         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
                         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
                     )

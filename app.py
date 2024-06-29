@@ -25,7 +25,7 @@ from graphNetwork import createNetwork, plotlyNetwork
 from datasetPreprocessingExplore import preprocess_dataset
 
 # Import dashboard preprocessing function
-
+from datasetPreprocessingInsights import createFigUniqueInterests, createFigAverageInterests
 
 # -------------------------------------- APP SETUP --------------------------------------
 
@@ -35,7 +35,7 @@ app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[db
 
 # -------------------------------------- DATA PREPROCESSING --------------------------------------
 
-file_path = '/Users/phantom/Documents/GitHub/Lobbyism-Dashboard/Datasets/Lobbyregister2024_full.csv'
+file_path = '/Users/phantom/Documents/GitHub/Lobbyism-DashboardV2/Datasets/Lobbyregister2024_full.csv'
 
 # Load original dataset 
 oDf = pd.read_csv(file_path)
@@ -85,6 +85,18 @@ netFigure.update_layout(
     paper_bgcolor='black',  # Sets the background color of the entire figure to black
     font=dict(color='white')  # Optional: Changes the font color to white for better contrast
 )
+
+# -------------------------------------- Insights Plots --------------------------------------
+
+# Interests 
+
+# Plot 1
+figUniqueInterests = createFigUniqueInterests()
+
+# Plot 2
+figAverageInterests = createFigAverageInterests()
+
+
 
 # Create a Dash container
 app.layout = dbc.Container([
@@ -262,13 +274,32 @@ app.layout = dbc.Container([
 
         html.Div(
         [
+            #Left Column
             dbc.Col(
             [
-                dbc.Row(html.Div(dcc.Graph(figure=fig))),
-                dbc.Row(html.Div(dcc.Graph(figure=fig))),
+                #First Row
+                dbc.Row(
+                    html.Div(
+                        #Mean Interests
+                        dcc.Graph(figure=figAverageInterests)
+                    )
+                ),
+                #Second Row
+                dbc.Row(
+                    html.Div(
+                        #
+                        dcc.Graph(figure=fig)
+                    )
+                ),
             ]
             ),
-            dbc.Col(html.Div(dcc.Graph(figure=figX))),
+            #Right Column
+            dbc.Col(
+                html.Div(
+                    #Unique Interests 
+                    dcc.Graph(figure=figUniqueInterests)
+                )
+            ),
         ],
         style={'display': 'flex'}
         ),
