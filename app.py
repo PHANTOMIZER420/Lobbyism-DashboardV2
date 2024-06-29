@@ -161,10 +161,11 @@ app.layout = dbc.Container([
                 dcc.Dropdown(
                     id='insights-chapter-dropdown',
                     options=[
-                        {'label': 'Interests', 'value': 1},
-                        {'label': 'Spending', 'value': 2},
-                        {'label': 'Entities', 'value': 3}
+                        {'label': 'Interests', 'value': 'INTERESTS'},
+                        {'label': 'Spendings', 'value': 'SPENDINGS'},
+                        {'label': 'Entities', 'value': 'ENTITIES'}
                     ],
+                    value='INTERESTS',
                     clearable=True,
                     optionHeight=40,
                     className='customDropdown',
@@ -275,6 +276,7 @@ app.layout = dbc.Container([
     # Insights container
     html.Div([
 
+        # -------------------------------------- Interests Chapter
         html.Div(
         [
             #Left Column
@@ -283,14 +285,14 @@ app.layout = dbc.Container([
                 #First Row
                 dbc.Row(
                     html.Div(
-                        #Mean Interests
+                        #Mean/Median Interests
                         dcc.Graph(figure=figAverageInterests)
                     )
                 ),
                 #Second Row
                 dbc.Row(
                     html.Div(
-                        #
+                        #Biggest interests areas
                         dcc.Graph(figure=figBiggestInterestAreas)
                     )
                 ),
@@ -304,8 +306,75 @@ app.layout = dbc.Container([
                 )
             ),
         ],
-        style={'display': 'flex'}
+        id='insights-interests',
         ),
+
+        # -------------------------------------- Spendings Chapter
+        html.Div(
+        [
+            #Left Column
+            dbc.Col(
+            [
+                #First Row
+                dbc.Row(
+                    html.Div(
+                        #Mean Interests
+                        #dcc.Graph(figure=figAverageInterests)
+                    )
+                ),
+                #Second Row
+                dbc.Row(
+                    html.Div(
+                        #
+                        #dcc.Graph(figure=figBiggestInterestAreas)
+                    )
+                ),
+            ]
+            ),
+            #Right Column
+            dbc.Col(
+                html.Div(
+                    #Unique Interests 
+                    #dcc.Graph(figure=figUniqueInterests)
+                )
+            ),
+        ],
+        id='insights-spendings',
+        ),
+
+        # -------------------------------------- Entities Chapter
+        html.Div(
+        [
+            #Left Column
+            dbc.Col(
+            [
+                #First Row
+                dbc.Row(
+                    html.Div(
+                        #Mean Interests
+                        #dcc.Graph(figure=figAverageInterests)
+                    )
+                ),
+                #Second Row
+                dbc.Row(
+                    html.Div(
+                        #
+                        #dcc.Graph(figure=figBiggestInterestAreas)
+                    )
+                ),
+            ]
+            ),
+            #Right Column
+            dbc.Col(
+                html.Div(
+                    #Unique Interests 
+                    #dcc.Graph(figure=figUniqueInterests)
+                )
+            ),
+        ],
+        id='insights-entities',
+        ),
+
     ],
     id='insights-tab',
     style={
@@ -450,9 +519,39 @@ app.layout = dbc.Container([
 # Toggle insights tab visibility
 def toggle_insights_tab_visibility(selected_tab):
     if selected_tab == 'INSIGHTS':
-        return ({'display': 'flex'}, {'display': 'block', 'margin-top':'30px', 'background':'black'})  # Change to 'flex' to make it visible
+        return ({'display': 'flex'}, {'display': 'block', 'margin-right': '20px', 'margin-top':'30px', 'background':'black'})  # Change to 'flex' to make it visible
     else:
         return ({'display': 'none'}, {'display': 'none'})  # Change to 'none' to hide it
+    
+
+# Inisghts chapter selection
+@app.callback(
+    [Output('insights-interests', 'style'),
+     Output('insights-spendings', 'style'),
+     Output('insights-entities', 'style')],
+    [Input('insights-chapter-dropdown', 'value')]
+)
+def update_chapter_visibility(selected_chapter):
+    # Default styles for hidden and visible chapters
+    hidden_style = {'display': 'none'}
+    visible_style = {'display': 'flex'}
+    
+    # Initialize all chapters to be hidden
+    interests_style = hidden_style
+    spendings_style = hidden_style
+    entities_style = hidden_style
+    # Add more chapters as needed
+    
+    # Update the style based on the selected chapter
+    if selected_chapter == 'INTERESTS':
+        interests_style = visible_style
+    elif selected_chapter == 'SPENDINGS':
+        spendings_style = visible_style
+    elif selected_chapter == 'ENTITIES':
+        entities_style = visible_style
+    # Add more conditions as needed for additional chapters
+    
+    return interests_style, spendings_style, entities_style  # Return updated styles for each chapter    
     
 
 # -------------------------------------- Explore --------------------------------------    

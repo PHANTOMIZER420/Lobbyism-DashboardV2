@@ -79,13 +79,13 @@ def createFigAverageInterests():
     df_entities['short_entity'] = [truncate_label(label) for label in df_entities['Entity type']]
 
     fig = px.bar(
-    df_entities, 
-    x='Entity type', 
-    y=[df_entities['Mean Interests'], 
-    df_entities['Median Interests']], 
-    barmode="group",
-    hover_name='Entity type',
-    hover_data=['Entity type', 'Number of entities']
+        df_entities, 
+        x='Entity type', 
+        y=[df_entities['Mean Interests'], 
+        df_entities['Median Interests']], 
+        barmode="group",
+        hover_name='Entity type',
+        hover_data=['Entity type', 'Number of entities']
     )
 
     fig.update_layout({
