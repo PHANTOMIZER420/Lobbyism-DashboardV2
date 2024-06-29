@@ -25,7 +25,8 @@ from graphNetwork import createNetwork, plotlyNetwork
 from datasetPreprocessingExplore import preprocess_dataset
 
 # Import dashboard preprocessing function
-from datasetPreprocessingInsights import createFigUniqueInterests, createFigAverageInterests, createFigBiggestInterestAreas
+import datasetPreprocessingInsights
+#from datasetPreprocessingInsights import createFigUniqueInterests, createFigAverageInterests, createFigBiggestInterestAreas, createFigSpendingsPie , createFigSpendingsScatter
 
 # -------------------------------------- APP SETUP --------------------------------------
 
@@ -91,13 +92,35 @@ netFigure.update_layout(
 # Interests 
 
 # Plot 1
-figUniqueInterests = createFigUniqueInterests()
+figUniqueInterests = datasetPreprocessingInsights.createFigUniqueInterests()
 
 # Plot 2
-figAverageInterests = createFigAverageInterests()
+figAverageInterests = datasetPreprocessingInsights.createFigAverageInterests()
 
 # Plot 3
-figBiggestInterestAreas = createFigBiggestInterestAreas()
+figBiggestInterestAreas = datasetPreprocessingInsights.createFigBiggestInterestAreas()
+
+
+# Spendings
+
+# Plot 1
+figSpendingsPie = datasetPreprocessingInsights.createFigSpendingsPie()
+
+# Plot 2
+figSpendingsScatter = datasetPreprocessingInsights.createFigSpendingsScatter()
+
+# Plot 3
+figSpendingPerEmployee = datasetPreprocessingInsights.createFigSpendingsPerEmployee()
+
+
+
+# Entities
+
+# Plot 1
+
+# Plot 2
+
+# Plot 3
 
 
 
@@ -318,15 +341,15 @@ app.layout = dbc.Container([
                 #First Row
                 dbc.Row(
                     html.Div(
-                        #Mean Interests
-                        #dcc.Graph(figure=figAverageInterests)
+                        #Spenings Pie
+                        dcc.Graph(figure=figSpendingPerEmployee)
                     )
                 ),
                 #Second Row
                 dbc.Row(
                     html.Div(
                         #
-                        #dcc.Graph(figure=figBiggestInterestAreas)
+                        dcc.Graph(figure=figSpendingsScatter)
                     )
                 ),
             ]
@@ -335,7 +358,7 @@ app.layout = dbc.Container([
             dbc.Col(
                 html.Div(
                     #Unique Interests 
-                    #dcc.Graph(figure=figUniqueInterests)
+                    dcc.Graph(figure=figSpendingsPie)
                 )
             ),
         ],

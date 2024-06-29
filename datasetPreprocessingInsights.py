@@ -8,6 +8,48 @@ import re
 filepath = '/Users/phantom/Documents/GitHub/Lobbyism-DashboardV2/Datasets/cleanedLobbyregister2024.csv'
 cleanedDataset = pd.read_csv(filepath)
 
+# 
+def dfEntities(type):
+# Count the number of individual interest areas
+    
+    def count_interests(row):
+        if type == 1:
+            return len(row['Interessen'])  # Splitting on semicolon to count interests
+        else:
+            if isinstance(row['Interessen'], str):
+                return len(row['Interessen'].split(';'))  # Assuming interests are separated by semicolons
+            else:
+                return 0  # Return 0 if 'Interessen' is NaN or not a string
+
+    cleanedDataset['Nummer Interessen'] = cleanedDataset.apply(count_interests, axis=1)
+
+    df_entities = cleanedDataset.value_counts('Tätigkeit').to_frame()
+    df_entities['Total Spending'] = cleanedDataset.groupby('Tätigkeit')['Betrag'].sum()
+    df_entities['Total Employees'] = cleanedDataset.groupby('Tätigkeit')['Beschäftigte'].sum()
+    df_entities['Spending per Employee'] = df_entities['Total Spending']/df_entities['Total Employees']
+    df_entities['Median Interests'] = cleanedDataset.groupby('Tätigkeit')['Nummer Interessen'].median()
+    df_entities['Mean Interests'] = cleanedDataset.groupby('Tätigkeit')['Nummer Interessen'].mean()
+    df_entities['Median Employees'] = cleanedDataset.groupby('Tätigkeit')['Beschäftigte'].median()
+    df_entities['Mean Employees'] = cleanedDataset.groupby('Tätigkeit')['Beschäftigte'].mean()
+
+
+    def truncate_label(label, max_length=15):
+        return label if len(label) <= max_length else label[:max_length] + '...'
+
+
+    # Funktion zum Kürzen der Labels
+    def truncate_label(label, max_length=15):
+        return label if len(label) <= max_length else label[:max_length] + '...'
+
+    # Labels kürzen
+    df_entities = df_entities.reset_index().rename(columns={"index": "Entity type", "count": "Number of entities"})
+    df_entities = df_entities.rename(columns={"Tätigkeit": "Entity type"})
+
+    # Labels kürzen
+    df_entities['short_entity'] = [truncate_label(label) for label in df_entities['Entity type']]
+
+    return df_entities
+
 # -------------------------------------- Chapter 1 --------------------------------------
 
 
@@ -47,36 +89,7 @@ def createFigUniqueInterests():
 
 def createFigAverageInterests():
 
-        # Count the number of individual interest areas
-    def count_interests(row):
-        return len(row['Interessen'])  # Splitting on semicolon to count interests
-
-    cleanedDataset['Nummer Interessen'] = cleanedDataset.apply(count_interests, axis=1)
-
-    df_entities = cleanedDataset.value_counts('Tätigkeit').to_frame()
-    df_entities['Total Spending'] = cleanedDataset.groupby('Tätigkeit')['Betrag'].sum()
-    df_entities['Total Employees'] = cleanedDataset.groupby('Tätigkeit')['Beschäftigte'].sum()
-    df_entities['Spending per Employee'] = df_entities['Total Spending']/df_entities['Total Employees']
-    df_entities['Median Interests'] = cleanedDataset.groupby('Tätigkeit')['Nummer Interessen'].median()
-    df_entities['Mean Interests'] = cleanedDataset.groupby('Tätigkeit')['Nummer Interessen'].mean()
-    df_entities['Median Employees'] = cleanedDataset.groupby('Tätigkeit')['Beschäftigte'].median()
-    df_entities['Mean Employees'] = cleanedDataset.groupby('Tätigkeit')['Beschäftigte'].mean()
-
-
-    def truncate_label(label, max_length=15):
-        return label if len(label) <= max_length else label[:max_length] + '...'
-
-
-    # Funktion zum Kürzen der Labels
-    def truncate_label(label, max_length=15):
-        return label if len(label) <= max_length else label[:max_length] + '...'
-
-    # Labels kürzen
-    df_entities = df_entities.reset_index().rename(columns={"index": "Entity type", "count": "Number of entities"})
-    df_entities = df_entities.rename(columns={"Tätigkeit": "Entity type"})
-
-    # Labels kürzen
-    df_entities['short_entity'] = [truncate_label(label) for label in df_entities['Entity type']]
+    df_entities = dfEntities(1)
 
     fig = px.bar(
         df_entities, 
@@ -132,10 +145,10 @@ def createFigBiggestInterestAreas():
     df_exploded['Interessen'] = df_exploded['Interessen'].map(interest_map)
 
     # Flatten the list of interests in each row, considering empty interest rows
-    flattened_interests = df_exploded['Interessen'].astype(str)
+    flattened_interests = df_exploded['Interessen'].astype(str) #.............................................
 
     # Remove leading and trailing punctuation
-    flattened_interests = flattened_interests.str.replace(r'^\W+|\W+$', '', regex=True)
+    flattened_interests = flattened_interests.str.replace('^\W+|\W+$', '', regex=True)
 
     # Strip leading and trailing whitespace
     flattened_interests = flattened_interests.str.strip()
@@ -168,3 +181,67 @@ def createFigBiggestInterestAreas():
     )
 
     return fig
+
+# -------------------------------------- Chapter 2 --------------------------------------
+
+# Plot 1
+
+def createFigSpendingsPie():
+
+    df_entities = dfEntities(0)
+
+    figPie = px.pie(df_entities, values='Total Spending', hover_name='Entity type',  hole=0.3)
+    figPie.update_layout({'plot_bgcolor': 'rgba(0,0,0,0)',
+                          'paper_bgcolor': 'rgba(0,0,0,0)'},
+                         uniformtext_minsize=12, 
+                         uniformtext_mode='hide',
+                         width=450,
+                         height=800
+    )
+    
+    figPie.update_traces(textposition='inside')
+
+    return figPie
+
+
+# Plot 2
+
+def createFigSpendingsScatter():
+
+    figScatter = px.scatter(cleanedDataset, x="Beschäftigte", y="Betrag", labels={'Name': "Name", 'Betrag': "Betrag", 'Beschäftigte': "Beschäftigte"}, color="Betrag", color_continuous_scale=px.colors.sequential.Bluered)
+
+    figScatter.update_layout({
+        'plot_bgcolor': 'black',
+        'paper_bgcolor': 'black',
+        },
+        width=600,
+        height=399
+    )
+
+    return figScatter
+
+# Plot 3
+
+def createFigSpendingsPerEmployee():
+
+    df_entities = dfEntities(0)
+
+    figSpendingPerEmployee = px.bar(df_entities, x='Entity type', hover_name='Entity type', y='Spending per Employee', color='Total Spending', color_continuous_scale=px.colors.sequential.Bluered)
+
+    figSpendingPerEmployee.update_layout({
+        'plot_bgcolor': 'black',
+        'paper_bgcolor': 'black',
+        },
+        width=600,
+        height=399,
+        xaxis=dict(
+            tickmode='array',
+            tickvals=df_entities['Entity type'],
+            ticktext=df_entities['short_entity']
+        )
+    )
+
+    return figSpendingPerEmployee
+
+
+# -------------------------------------- Chapter 3 --------------------------------------
