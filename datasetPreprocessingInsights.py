@@ -83,6 +83,7 @@ def createFigUniqueInterests():
     fig.update_layout({'plot_bgcolor': 'rgba(0,0,0,0)',
                        'paper_bgcolor': 'rgba(0,0,0,0)',
                        },
+                       font=dict(color='white'),
                         xaxis=dict(
                             visible=False,
                             showticklabels=False
@@ -116,6 +117,7 @@ def createFigAverageInterests():
                         width=500,
                         height=399,
                         showlegend=False,
+                        font=dict(color='white'),
                         xaxis=dict(
                             visible=False,
                             showticklabels=False
@@ -185,6 +187,7 @@ def createFigBiggestInterestAreas():
                        'paper_bgcolor': 'rgba(0,0,0,0)'},
         width=500,
         height=399,
+        font=dict(color='white'),
         xaxis=dict(
             tickmode='array',
             tickvals=interest_counts_df['Interest'],
@@ -215,6 +218,7 @@ def createFigSpendingsPie():
                           'paper_bgcolor': 'rgba(0,0,0,0)'},
                          uniformtext_minsize=12, 
                          uniformtext_mode='hide',
+                         font=dict(color='white'),
                          width=450,
                          height=800
     )
@@ -240,6 +244,7 @@ def createFigSpendingsScatter():
         'plot_bgcolor': 'black',
         'paper_bgcolor': 'black',
         },
+        font=dict(color='white'),
         xaxis=dict(
             visible=False,
             showticklabels=False
@@ -264,6 +269,7 @@ def createFigSpendingsPerEmployee():
         width=600,
         height=399,
         title='Spending/Employee per entity type',
+        font=dict(color='white'),
         xaxis=dict(
             tickmode='array',
             tickvals=df_entities['Entity type'],
@@ -291,7 +297,9 @@ def createFigNumberOfEntities():#
         'paper_bgcolor': 'black',
         },
         width=500,
-        height=399,
+        height=798,
+        title='Number of entities',
+        font=dict(color='white'),
         xaxis=dict(
             tickmode='array',
             tickvals=df_entities['Entity type'],
@@ -310,22 +318,24 @@ def createFigAverageEmployees():
 
     df_entities = dfEntities(0)
 
-    fig = px.bar(
-    df_entities, 
-    x='Entity type', 
-    y=[df_entities['Mean Employees'], 
-    df_entities['Median Employees']], 
-    barmode="group",
-    hover_name='Entity type',
-    hover_data=['Entity type', 'Number of entities'],
-    color_discrete_sequence=["green", "purple"] 
+    fig = px.bar(df_entities, 
+                 x='Entity type', 
+                 y=[df_entities['Mean Employees'], 
+                    df_entities['Median Employees']],
+                 barmode="group",
+                 title='Average Employees per Entity',
+                 hover_name='Entity type',
+                 hover_data=['Entity type', 'Number of entities'],
+                 color_discrete_sequence=["blue", "red"] 
     )
 
     fig.update_layout({
         'plot_bgcolor': 'black',
         'paper_bgcolor': 'black'},
         width=500,
-        height=399,
+        height=798,
+        showlegend=False,
+        font=dict(color='white'),
         xaxis=dict(
             tickmode='array',
             tickvals=df_entities['Entity type'],
@@ -435,7 +445,7 @@ def createFigInterestPerEntity():
                      size='Count', 
                      color='Count',
                      hover_name='Tätigkeit',
-                     width=500,
+                     width=1020,
                      height=798,
                      title='Interests per Activity (Tätigkeit) in German Lobbies',
                      labels={'Tätigkeit': 'Activity (Tätigkeit)', 'Supercategory': 'Supercategory', 'Count': 'Number of Occurrences'}
@@ -444,6 +454,7 @@ def createFigInterestPerEntity():
     fig.update_layout({
         'plot_bgcolor': 'black',
         'paper_bgcolor': 'black'},
+        font=dict(color='white'),
         xaxis=dict(
             tickmode='array',
             tickvals=taetigkeit_interessen_counts['Tätigkeit'],

@@ -190,7 +190,8 @@ app.layout = dbc.Container([
                     options=[
                         {'label': 'Interests', 'value': 'INTERESTS'},
                         {'label': 'Spendings', 'value': 'SPENDINGS'},
-                        {'label': 'Entities', 'value': 'ENTITIES'}
+                        {'label': 'Entities 1', 'value': 'ENTITIES_1'},
+                        {'label': 'Entities 2', 'value': 'ENTITIES_2'}
                     ],
                     value='INTERESTS',
                     clearable=True,
@@ -369,37 +370,29 @@ app.layout = dbc.Container([
         id='insights-spendings',
         ),
 
-        # -------------------------------------- Entities Chapter
+        # -------------------------------------- Entities 1 Chapter
         html.Div(
-        [
-            #Left Column
-            dbc.Col(
             [
-                #First Row
-                dbc.Row(
-                    html.Div(
-                        #Number of entities
-                        dcc.Graph(figure=figNumberOfEntities)
-                    )
-                ),
-                #Second Row
-                dbc.Row(
-                    html.Div(
-                        #
-                        dcc.Graph(figure=figAverageEmployees)
-                    )
-                ),
-            ]
-            ),
-            #Right Column
-            dbc.Col(
                 html.Div(
-                    #Unique Interests 
-                    dcc.Graph(figure=figInterestsPerEntity)
+                    #Number of entities
+                    dcc.Graph(figure=figNumberOfEntities)
+                ),
+                html.Div(                        #Average Employees
+                    dcc.Graph(figure=figAverageEmployees)
                 )
-            ),
         ],
-        id='insights-entities',
+        id='insights-entities-1',
+        ),
+
+        # -------------------------------------- Entities 2 Chapter
+        html.Div(
+        [           
+            html.Div(
+                #Interests per Entity
+                dcc.Graph(figure=figInterestsPerEntity)
+            )            
+        ],
+        id='insights-entities-2',
         ),
 
     ],
@@ -555,7 +548,8 @@ def toggle_insights_tab_visibility(selected_tab):
 @app.callback(
     [Output('insights-interests', 'style'),
      Output('insights-spendings', 'style'),
-     Output('insights-entities', 'style')],
+     Output('insights-entities-1', 'style'),
+     Output('insights-entities-2', 'style')],
     [Input('insights-chapter-dropdown', 'value')]
 )
 def update_chapter_visibility(selected_chapter):
@@ -566,7 +560,9 @@ def update_chapter_visibility(selected_chapter):
     # Initialize all chapters to be hidden
     interests_style = hidden_style
     spendings_style = hidden_style
-    entities_style = hidden_style
+    entities_1_style = hidden_style
+    entities_2_style = hidden_style
+    
     # Add more chapters as needed
     
     # Update the style based on the selected chapter
@@ -574,11 +570,13 @@ def update_chapter_visibility(selected_chapter):
         interests_style = visible_style
     elif selected_chapter == 'SPENDINGS':
         spendings_style = visible_style
-    elif selected_chapter == 'ENTITIES':
-        entities_style = visible_style
+    elif selected_chapter == 'ENTITIES_1':
+        entities_1_style = visible_style
+    elif selected_chapter == 'ENTITIES_2':
+        entities_2_style = visible_style
     # Add more conditions as needed for additional chapters
     
-    return interests_style, spendings_style, entities_style  # Return updated styles for each chapter    
+    return interests_style, spendings_style, entities_1_style, entities_2_style  # Return updated styles for each chapter    
     
 
 # -------------------------------------- Explore --------------------------------------    
