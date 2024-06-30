@@ -611,27 +611,40 @@ def render_content(tab):
         return dash_table.DataTable(
                     id='cleaned-data-table',
                     columns=[{'name': i, 'id': i, 'deletable': True} for i in sorted(cDf.columns)],
-                    page_current=0,
-                    page_size=16,
-                    page_action='custom',
-                    sort_action='custom',
-                    sort_mode='single',
                     sort_by=[],
-                    style_table={'overflowX': 'auto', 'overflowY': 'auto'},
+                    data=cDf.to_dict('records'),
+                    page_action='none',
+                    filter_action='native',
+                    css=[{
+                        'selector': 'table',
+                        'rule': 'table-layout: fixed'  # note - this does not work with fixed_rows
+                    }],
+                    style_data={
+                    'width': '{}%'.format(100. / len(cDf.columns)),
+                    'textOverflow': 'hidden'
+                    },
+                    style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 550},
                     style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
                     style_cell={'backgroundColor': 'black','color': 'white','textAlign': 'left', 'fontFamily': 'sans-serif'},
                 ), {'display':'block', 'background-color': 'black'}, {'display':'none', 'background-color': 'black'}
+    
     elif tab == 'original-tab':
         return dash_table.DataTable(
                     id='original-data-table',
                     columns=[{'name': i, 'id': i, 'deletable': True} for i in sorted(oDf.columns)],
-                    page_current=0,
-                    page_size=16,
-                    page_action='custom',
-                    sort_action='custom',
-                    sort_mode='single',
                     sort_by=[],
-                    style_table={'overflowX': 'auto', 'overflowY': 'auto'},
+                    data=oDf.to_dict('records'),
+                    page_action='none',
+                    filter_action='native',
+                    css=[{
+                        'selector': 'table',
+                        'rule': 'table-layout: fixed'  # note - this does not work with fixed_rows
+                    }],
+                    style_data={
+                    'width': '{}%'.format(100. / len(oDf.columns)),
+                    'textOverflow': 'hidden'
+                    },
+                    style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 550},
                     style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
                     style_cell={'backgroundColor': 'black','color': 'white','textAlign': 'left', 'fontFamily': 'sans-serif'},
                 ), {'display':'none', 'background-color': 'black'}, {'display':'block', 'background-color': 'black'}
@@ -658,32 +671,19 @@ def toggle_network_tab_visibility(selected_tab):
 @app.callback(
     [Output('original-data-table', 'data'),
     Output('original-data-table', 'columns')], # Update columns dynamically
-    [Input('original-data-table', "page_current"),
-    Input('original-data-table', "page_size"),
-    Input('original-data-table', 'sort_by'),
+    [
     Input('column-dropdown-filter-original', 'value')] # Update table based on selected columns
 )
 
 # Update table
-def update_table(page_current, page_size, sort_by, selected_columns):
+def update_table(selected_columns):
     # Filter DataFrame based on selected columns
     if selected_columns:
         oDff = oDf[selected_columns]
     else:
         oDff = oDf.copy()
 
-    # Sort if there is a sort_by criteria
-    if len(sort_by):
-        oDff = oDff.sort_values(
-            sort_by[0]['column_id'],
-            ascending=sort_by[0]['direction'] == 'asc',
-            inplace=False
-        )
 
-    # Paginate
-    page_start = page_current * page_size
-    page_end = page_start + page_size
-    oDff = oDff.iloc[page_start:page_end]
 
     # Prepare columns for the DataTable
     columns = [{'name': i, 'id': i} for i in selected_columns] if selected_columns else [{'name': i, 'id': i} for i in oDf.columns]
@@ -699,9 +699,7 @@ def update_table(page_current, page_size, sort_by, selected_columns):
 @app.callback(
     [Output('cleaned-data-table', 'data'),
     Output('cleaned-data-table', 'columns')], # Update columns dynamically
-    [Input('cleaned-data-table', "page_current"),
-    Input('cleaned-data-table', "page_size"),
-    Input('cleaned-data-table', 'sort_by'),
+    [
     Input('column-dropdown-filter-cleaned', 'value'),
     Input('fiscal-year-dropdown', 'value'),
     Input('average-employees-dropdown', 'value'),
@@ -709,7 +707,7 @@ def update_table(page_current, page_size, sort_by, selected_columns):
     Input('spending-per-employee-dropdown', 'value'),
     Input('entity-dropdown', 'value')] # Update table based on selected columns
 )
-def update_table(page_current, page_size, sort_by, selected_columns, selected_year, selected_employees, selected_spending, selected_spending_per_employee, selected_entity):
+def update_table(selected_columns, selected_year, selected_employees, selected_spending, selected_spending_per_employee, selected_entity):
     filtered_df = cDf.copy()  # Start with a copy of the original DataFrame to avoid modifying it directly
     
     # Filter by year
@@ -770,17 +768,6 @@ def update_table(page_current, page_size, sort_by, selected_columns, selected_ye
         cDff = filtered_df.copy()
 
     # Sort if there is a sort_by criteria
-    if len(sort_by):
-        cDff = cDff.sort_values(
-            sort_by[0]['column_id'],
-            ascending=sort_by[0]['direction'] == 'asc',
-            inplace=False
-        )
-
-    # Paginate
-    page_start = page_current * page_size
-    page_end = page_start + page_size
-    cDff = cDff.iloc[page_start:page_end]
 
     # Prepare columns for the DataTable
     columns = [{'name': i, 'id': i} for i in selected_columns] if selected_columns else [{'name': i, 'id': i} for i in filtered_df.columns]
