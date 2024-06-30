@@ -72,7 +72,7 @@ def createFigUniqueInterests():
 
     taetigkeit_interessen_counts['short_entity'] = [truncate_label(label) for label in taetigkeit_interessen_counts['Tätigkeit']]
 
-    # Create a bubble chart using Plotly
+    # Create a bar chart using Plotly
     fig= px.bar(taetigkeit_interessen_counts, x='Tätigkeit', y='Unique_Interessen_Count', #size='Unique_Interessen_Count',
                         color='Unique_Interessen_Count', # Color the bubbles according to the count of unique interests
                         title='Number of Unique Interests per Entity',
@@ -83,12 +83,11 @@ def createFigUniqueInterests():
     fig.update_layout({'plot_bgcolor': 'rgba(0,0,0,0)',
                        'paper_bgcolor': 'rgba(0,0,0,0)',
                        },
-                       font=dict(color='white'),
+                        font=dict(color='white'),
                         xaxis=dict(
                             visible=False,
                             showticklabels=False
                         ),
-                        
     )
 
     return fig
@@ -261,7 +260,12 @@ def createFigSpendingsPerEmployee():
 
     df_entities = dfEntities(0)
 
-    figSpendingPerEmployee = px.bar(df_entities, x='Entity type', hover_name='Entity type', y='Spending per Employee', color='Total Spending', color_continuous_scale=px.colors.sequential.Bluered)
+    figSpendingPerEmployee = px.bar(df_entities, 
+                                    x='Entity type', 
+                                    hover_name='Entity type', 
+                                    y='Spending per Employee', 
+                                    color='Total Spending', 
+                                    color_continuous_scale=px.colors.sequential.Bluered)
 
     figSpendingPerEmployee.update_layout({
         'plot_bgcolor': 'black',
@@ -450,6 +454,9 @@ def createFigInterestPerEntity():
                      title='Interests per Activity (Tätigkeit) in German Lobbies',
                      labels={'Tätigkeit': 'Activity (Tätigkeit)', 'Supercategory': 'Supercategory', 'Count': 'Number of Occurrences'}
     )
+
+    fig.update_xaxes(showgrid=True, gridwidth=0.1)  # Make x-axis grid lines thinner
+    fig.update_yaxes(showgrid=True, gridwidth=0.1)  # Make y-axis grid lines thinner
 
     fig.update_layout({
         'plot_bgcolor': 'black',

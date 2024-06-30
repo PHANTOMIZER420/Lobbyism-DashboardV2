@@ -68,7 +68,7 @@ def plotlyNetwork(G):
             color=[],
             size=10,
             colorbar=dict(
-                thickness=15,
+                thickness=20,
                 title='Node Connections',
                 xanchor='left',
                 titleside='right'
@@ -79,9 +79,9 @@ def plotlyNetwork(G):
                     layout=go.Layout(
                         showlegend=False,
                         hovermode='closest',
-                        margin=dict(b=0, l=0, r=1, t=0),
-                        width=700, 
-                        height=700,
+                        margin=dict(b=0, l=0, r=0, t=0),
+                        width=900, 
+                        height=796,
                         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
                         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
                     )

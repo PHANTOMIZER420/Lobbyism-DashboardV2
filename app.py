@@ -504,8 +504,6 @@ app.layout = dbc.Container([
 
     html.Div([
         html.Div([
-            # Title
-                html.H2('Network Analysis'),
                 dcc.Graph(figure=netFigure), 
         ],
         id='network-tab',
@@ -611,13 +609,13 @@ def render_content(tab):
                     columns=[{'name': i, 'id': i, 'deletable': True} for i in sorted(cDf.columns)],
                     sort_by=[],
                     filter_action='native',
+                    sort_action='native',
                     css=[{
                         'selector': 'table',
                         'rule': 'table-layout: fixed'  # note - this does not work with fixed_rows
                     }],
                     style_data={
-                    'width': '{}%'.format(100. / len(cDf.columns)),
-                    'textOverflow': 'hidden'
+                    'width': '{}%'.format(100. / len(cDf.columns))
                     },
                     style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 511},
                     style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
@@ -630,6 +628,7 @@ def render_content(tab):
                     columns=[{'name': i, 'id': i, 'deletable': True} for i in sorted(oDf.columns)],
                     sort_by=[],
                     filter_action='native',
+                    sort_action='native',
                     css=[{
                         'selector': 'table',
                         'rule': 'table-layout: fixed'  # note - this does not work with fixed_rows
