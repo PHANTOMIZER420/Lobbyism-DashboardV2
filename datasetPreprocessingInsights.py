@@ -66,14 +66,11 @@ def createFigUniqueInterests():
     df_exploded['Interessen'] = cleanedDataset['Interessen'].str.split('; ')
     df_exploded = df_exploded.explode('Interessen')
 
-    # Ensure "Interessen" is of string type, then truncate strings to the first 20 characters
-    #df_exploded['Tätigkeit'] = df_exploded['Tätigkeit'].apply(lambda x: x[:15])
-
-    df_exploded['short_entity'] = [truncate_label(label) for label in df_exploded['Tätigkeit']]
-
     # Group by "Tätigkeit" and count the number of unique "Interessen" for each
     taetigkeit_interessen_counts = df_exploded.groupby('Tätigkeit')['Interessen'].nunique().reset_index()
     taetigkeit_interessen_counts.columns = ['Tätigkeit', 'Unique_Interessen_Count']
+
+    taetigkeit_interessen_counts['short_entity'] = [truncate_label(label) for label in taetigkeit_interessen_counts['Tätigkeit']]
 
     # Create a bubble chart using Plotly
     fig= px.bar(taetigkeit_interessen_counts, x='Tätigkeit', y='Unique_Interessen_Count', #size='Unique_Interessen_Count',
@@ -81,16 +78,16 @@ def createFigUniqueInterests():
                         title='Number of Unique Interests per Entity',
                         width=526,
                         height=798,
-                        labels={'Unique_Interessen_Count': 'Unique Interests', 'Tätigkeit': 'Entity'})
+                        labels={'Unique_Interessen_Count': 'Unique Interests', 'Tätigkeit': 'Entity type'})
 
     fig.update_layout({'plot_bgcolor': 'rgba(0,0,0,0)',
                        'paper_bgcolor': 'rgba(0,0,0,0)',
                        },
-                       xaxis=dict(
-                           tickmode='array',
-                           tickvals=taetigkeit_interessen_counts['Tätigkeit'],
-                           ticktext=taetigkeit_interessen_counts['short_entity']
-                        )
+                        xaxis=dict(
+                            visible=False,
+                            showticklabels=False
+                        ),
+                        
     )
 
     return fig
@@ -108,20 +105,22 @@ def createFigAverageInterests():
         y=[df_entities['Mean Interests'], 
         df_entities['Median Interests']], 
         barmode="group",
+        title="Average number of interests",
         hover_name='Entity type',
-        hover_data=['Entity type', 'Number of entities']
+        hover_data=['Entity type', 'Number of entities'],
+        labels={'value':'Average interests'}
     )
 
     fig.update_layout({'plot_bgcolor': 'rgba(0,0,0,0)',
                        'paper_bgcolor': 'rgba(0,0,0,0)'},
-        width=500,
-        height=399,
-        xaxis=dict(
-            tickmode='array',
-            tickvals=df_entities['Entity type'],
-            ticktext=df_entities['short_entity']
-    )
-    )
+                        width=500,
+                        height=399,
+                        showlegend=False,
+                        xaxis=dict(
+                            visible=False,
+                            showticklabels=False
+                        )
+                    )
 
     return fig
 
@@ -189,7 +188,9 @@ def createFigBiggestInterestAreas():
         xaxis=dict(
             tickmode='array',
             tickvals=interest_counts_df['Interest'],
-            ticktext=interest_counts_df['shortInterest']
+            ticktext=interest_counts_df['shortInterest'],
+            visible=False,
+            showticklabels=False
         )
     )
 
@@ -204,7 +205,12 @@ def createFigSpendingsPie():
 
     df_entities = dfEntities(0)
 
-    figPie = px.pie(df_entities, values='Total Spending', hover_name='Entity type',  hole=0.3)
+    figPie = px.pie(df_entities, 
+                    values='Total Spending', 
+                    hover_name='Entity type',  
+                    hole=0.3,
+                    title='Total spendings per entity type')
+    
     figPie.update_layout({'plot_bgcolor': 'rgba(0,0,0,0)',
                           'paper_bgcolor': 'rgba(0,0,0,0)'},
                          uniformtext_minsize=12, 
@@ -222,12 +228,22 @@ def createFigSpendingsPie():
 
 def createFigSpendingsScatter():
 
-    figScatter = px.scatter(cleanedDataset, x="Beschäftigte", y="Betrag", labels={'Name': "Name", 'Betrag': "Betrag", 'Beschäftigte': "Beschäftigte"}, color="Betrag", color_continuous_scale=px.colors.sequential.Bluered)
+    figScatter = px.scatter(cleanedDataset, 
+                            x="Beschäftigte", 
+                            y="Betrag", 
+                            labels={'Name': "Name", 'Betrag': "Spending", 'Beschäftigte': "Employees"}, 
+                            title='Spending in relation to number of employees', 
+                            color="Betrag", 
+                            color_continuous_scale=px.colors.sequential.Bluered)
 
     figScatter.update_layout({
         'plot_bgcolor': 'black',
         'paper_bgcolor': 'black',
         },
+        xaxis=dict(
+            visible=False,
+            showticklabels=False
+        ),
         width=600,
         height=399
     )
@@ -247,10 +263,13 @@ def createFigSpendingsPerEmployee():
         'paper_bgcolor': 'black'},
         width=600,
         height=399,
+        title='Spending/Employee per entity type',
         xaxis=dict(
             tickmode='array',
             tickvals=df_entities['Entity type'],
-            ticktext=df_entities['short_entity']
+            ticktext=df_entities['short_entity'],
+            visible=False,
+            showticklabels=False
         )
     )
 
@@ -276,7 +295,9 @@ def createFigNumberOfEntities():#
         xaxis=dict(
             tickmode='array',
             tickvals=df_entities['Entity type'],
-            ticktext=df_entities['short_entity']
+            ticktext=df_entities['short_entity'],
+            visible=False,
+            showticklabels=False
         )
     )
 
@@ -308,7 +329,9 @@ def createFigAverageEmployees():
         xaxis=dict(
             tickmode='array',
             tickvals=df_entities['Entity type'],
-            ticktext=df_entities['short_entity']
+            ticktext=df_entities['short_entity'],
+            visible=False,
+            showticklabels=False
         )
     )
 
@@ -424,8 +447,8 @@ def createFigInterestPerEntity():
         xaxis=dict(
             tickmode='array',
             tickvals=taetigkeit_interessen_counts['Tätigkeit'],
-            ticktext=taetigkeit_interessen_counts['short_entity']
-        )
+            ticktext=taetigkeit_interessen_counts['short_entity'],
+        ),
     )
 
     return fig

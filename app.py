@@ -36,16 +36,16 @@ app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[db
 
 # -------------------------------------- DATA PREPROCESSING --------------------------------------
 
-file_path = '/Users/phantom/Documents/GitHub/Lobbyism-DashboardV2/Datasets/Lobbyregister2024_full.csv'
+filepath = '/Users/phantom/Documents/GitHub/Lobbyism-DashboardV2/Datasets/Lobbyregister2024_full.csv'
 
 # Load original dataset 
-oDf = pd.read_csv(file_path)
+oDf = pd.read_csv(filepath)
 
 # Set original dataset index
 oDf[' index'] = range(1, len(oDf) + 1)
 
 # Preprocess the dataset
-cDf = preprocess_dataset(file_path)
+cDf = preprocess_dataset(filepath)
 
 # -------------------------------------- PLOTS --------------------------------------
 
@@ -528,7 +528,7 @@ app.layout = dbc.Container([
 ],
     # Style for the dash container
     fluid=True,
-    style={'display': 'flex'},
+    style={'display': 'flex', 'background':'black'},
     className='dashboard-container')
 
 
@@ -612,8 +612,6 @@ def render_content(tab):
                     id='cleaned-data-table',
                     columns=[{'name': i, 'id': i, 'deletable': True} for i in sorted(cDf.columns)],
                     sort_by=[],
-                    data=cDf.to_dict('records'),
-                    page_action='none',
                     filter_action='native',
                     css=[{
                         'selector': 'table',
@@ -623,7 +621,7 @@ def render_content(tab):
                     'width': '{}%'.format(100. / len(cDf.columns)),
                     'textOverflow': 'hidden'
                     },
-                    style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 510},
+                    style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 511},
                     style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
                     style_cell={'backgroundColor': 'black','color': 'white','textAlign': 'left', 'fontFamily': 'sans-serif'},
                 ), {'display':'block', 'background-color': 'black'}, {'display':'none', 'background-color': 'black'}
@@ -633,7 +631,6 @@ def render_content(tab):
                     id='original-data-table',
                     columns=[{'name': i, 'id': i, 'deletable': True} for i in sorted(oDf.columns)],
                     sort_by=[],
-                    data=oDf.to_dict('records'),
                     filter_action='native',
                     css=[{
                         'selector': 'table',
@@ -643,7 +640,7 @@ def render_content(tab):
                     'width': '{}%'.format(100. / len(oDf.columns)),
                     'textOverflow': 'hidden'
                     },
-                    style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 510},
+                    style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 511},
                     style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
                     style_cell={'backgroundColor': 'black','color': 'white','textAlign': 'left', 'fontFamily': 'sans-serif'},
                 ), {'display':'none', 'background-color': 'black'}, {'display':'block', 'background-color': 'black'}
@@ -670,8 +667,7 @@ def toggle_network_tab_visibility(selected_tab):
 @app.callback(
     [Output('original-data-table', 'data'),
     Output('original-data-table', 'columns')], # Update columns dynamically
-    [
-    Input('column-dropdown-filter-original', 'value')] # Update table based on selected columns
+    [Input('column-dropdown-filter-original', 'value')] # Update table based on selected columns
 )
 
 # Update table
@@ -681,8 +677,6 @@ def update_table(selected_columns):
         oDff = oDf[selected_columns]
     else:
         oDff = oDf.copy()
-
-
 
     # Prepare columns for the DataTable
     columns = [{'name': i, 'id': i} for i in selected_columns] if selected_columns else [{'name': i, 'id': i} for i in oDf.columns]
@@ -792,4 +786,4 @@ def toggle_modal(n1, n2, is_open):
 
 # Run the app on port 8050
 if __name__ == "__main__":
-    app.run_server(debug=False, host="0.0.0.0", port=8050)
+    app.run_server(debug=True, host="0.0.0.0", port=8050)
