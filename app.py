@@ -36,7 +36,7 @@ app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[db
 
 # -------------------------------------- DATA PREPROCESSING --------------------------------------
 
-filepath = '/Users/phantom/Documents/GitHub/Lobbyism-DashboardV2/Datasets/Lobbyregister2024_full.csv'
+filepath = 'Datasets/Lobbyregister2024_full.csv'
 
 # Load original dataset 
 oDf = pd.read_csv(filepath)

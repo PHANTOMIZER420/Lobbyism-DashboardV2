@@ -6,7 +6,7 @@ import re
 
 
 # Read cleaned dataset
-filepath = '/Users/phantom/Documents/GitHub/Lobbyism-DashboardV2/Datasets/cleanedLobbyregister2024.csv'
+filepath = 'Datasets/cleanedLobbyregister2024.csv'
 cleanedDataset = pd.read_csv(filepath)
 
 def truncate_label(label, max_length=15):
