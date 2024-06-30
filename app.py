@@ -78,7 +78,7 @@ figX.update_layout(plot_bgcolor='#010103', width=500, height=760,
 # -------------------------------------- Network Plot --------------------------------------
 
 # Create network
-netGraph = createNetwork(cDf)
+netGraph = createNetwork()
 netFigure = plotlyNetwork(netGraph)
 
 netFigure.update_layout(
@@ -504,7 +504,7 @@ app.layout = dbc.Container([
 
     html.Div([
         html.Div([
-                dcc.Graph(figure=netFigure), 
+            dcc.Graph(figure=netFigure), 
         ],
         id='network-tab',
         style={
