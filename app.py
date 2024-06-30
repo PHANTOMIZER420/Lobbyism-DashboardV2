@@ -623,7 +623,7 @@ def render_content(tab):
                     'width': '{}%'.format(100. / len(cDf.columns)),
                     'textOverflow': 'hidden'
                     },
-                    style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 550},
+                    style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 510},
                     style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
                     style_cell={'backgroundColor': 'black','color': 'white','textAlign': 'left', 'fontFamily': 'sans-serif'},
                 ), {'display':'block', 'background-color': 'black'}, {'display':'none', 'background-color': 'black'}
@@ -634,7 +634,6 @@ def render_content(tab):
                     columns=[{'name': i, 'id': i, 'deletable': True} for i in sorted(oDf.columns)],
                     sort_by=[],
                     data=oDf.to_dict('records'),
-                    page_action='none',
                     filter_action='native',
                     css=[{
                         'selector': 'table',
@@ -644,7 +643,7 @@ def render_content(tab):
                     'width': '{}%'.format(100. / len(oDf.columns)),
                     'textOverflow': 'hidden'
                     },
-                    style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 550},
+                    style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 510},
                     style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
                     style_cell={'backgroundColor': 'black','color': 'white','textAlign': 'left', 'fontFamily': 'sans-serif'},
                 ), {'display':'none', 'background-color': 'black'}, {'display':'block', 'background-color': 'black'}
@@ -793,4 +792,4 @@ def toggle_modal(n1, n2, is_open):
 
 # Run the app on port 8050
 if __name__ == "__main__":
-    app.run_server(debug=True, host="0.0.0.0", port=8050)
+    app.run_server(debug=False, host="0.0.0.0", port=8050)

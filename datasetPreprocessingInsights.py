@@ -9,6 +9,9 @@ import re
 filepath = '/Users/phantom/Documents/GitHub/Lobbyism-DashboardV2/Datasets/cleanedLobbyregister2024.csv'
 cleanedDataset = pd.read_csv(filepath)
 
+def truncate_label(label, max_length=15):
+        return label if len(label) <= max_length else label[:max_length] + '...'
+
 # 
 def dfEntities(type):
 # Count the number of individual interest areas
@@ -64,7 +67,9 @@ def createFigUniqueInterests():
     df_exploded = df_exploded.explode('Interessen')
 
     # Ensure "Interessen" is of string type, then truncate strings to the first 20 characters
-    df_exploded['Tätigkeit'] = df_exploded['Tätigkeit'].apply(lambda x: x[:15])
+    #df_exploded['Tätigkeit'] = df_exploded['Tätigkeit'].apply(lambda x: x[:15])
+
+    df_exploded['short_entity'] = [truncate_label(label) for label in df_exploded['Tätigkeit']]
 
     # Group by "Tätigkeit" and count the number of unique "Interessen" for each
     taetigkeit_interessen_counts = df_exploded.groupby('Tätigkeit')['Interessen'].nunique().reset_index()
@@ -79,8 +84,14 @@ def createFigUniqueInterests():
                         labels={'Unique_Interessen_Count': 'Unique Interests', 'Tätigkeit': 'Entity'})
 
     fig.update_layout({'plot_bgcolor': 'rgba(0,0,0,0)',
-                       'paper_bgcolor': 'rgba(0,0,0,0)'}
-                       )
+                       'paper_bgcolor': 'rgba(0,0,0,0)',
+                       },
+                       xaxis=dict(
+                           tickmode='array',
+                           tickvals=taetigkeit_interessen_counts['Tätigkeit'],
+                           ticktext=taetigkeit_interessen_counts['short_entity']
+                        )
+    )
 
     return fig
 
@@ -162,6 +173,8 @@ def createFigBiggestInterestAreas():
     interest_counts_df = interest_counts_df.sort_values(by='Count', ascending=False)
     interest_counts_df = interest_counts_df[interest_counts_df['Count'] > 434]
 
+    interest_counts_df['shortInterest'] = [truncate_label(label) for label in interest_counts_df['Interest']]
+
     # Create a bar chart using Plotly
     fig = px.bar(interest_counts_df, y='Count', x='Interest', orientation='v',
                 title='Biggest interest areas for Lobbies in Germany', 
@@ -172,8 +185,14 @@ def createFigBiggestInterestAreas():
     fig.update_layout({'plot_bgcolor': 'rgba(0,0,0,0)',
                        'paper_bgcolor': 'rgba(0,0,0,0)'},
         width=500,
-        height=399
+        height=399,
+        xaxis=dict(
+            tickmode='array',
+            tickvals=interest_counts_df['Interest'],
+            ticktext=interest_counts_df['shortInterest']
+        )
     )
+
 
     return fig
 
@@ -383,9 +402,6 @@ def createFigInterestPerEntity():
 
     # Group by 'Tätigkeit' and 'Interessen' and count the occurrences
     taetigkeit_interessen_counts = df_exploded_small.groupby(['Tätigkeit', 'Supercategory']).size().reset_index(name='Count')
-
-    def truncate_label(label, max_length=15):
-        return label if len(label) <= max_length else label[:max_length] + '...'
 
     taetigkeit_interessen_counts['short_entity'] = [truncate_label(label) for label in taetigkeit_interessen_counts['Tätigkeit']]
 
