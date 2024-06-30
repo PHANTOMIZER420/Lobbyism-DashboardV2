@@ -58,13 +58,13 @@ def dfEntities(type):
 
 def createFigUniqueInterests():
     # Split the values in "Interessen- und Vorhabenbereiche" column and create new rows
-    df_exploded = cleanedDataset
+    df_exploded = cleanedDataset.copy()
 
     df_exploded['Interessen'] = cleanedDataset['Interessen'].str.split('; ')
     df_exploded = df_exploded.explode('Interessen')
 
     # Ensure "Interessen" is of string type, then truncate strings to the first 20 characters
-    df_exploded['Tätigkeit'] = df_exploded['Tätigkeit'].astype(str).apply(lambda x: x[:15])
+    df_exploded['Tätigkeit'] = df_exploded['Tätigkeit'].apply(lambda x: x[:15])
 
     # Group by "Tätigkeit" and count the number of unique "Interessen" for each
     taetigkeit_interessen_counts = df_exploded.groupby('Tätigkeit')['Interessen'].nunique().reset_index()
@@ -119,7 +119,7 @@ def createFigAverageInterests():
 
 def createFigBiggestInterestAreas():
 
-    df_exploded = cleanedDataset
+    df_exploded = cleanedDataset.copy()
 
     df_exploded['Interessen'] = cleanedDataset['Interessen'].str.split('; ')
     df_exploded = df_exploded.explode('Interessen')
@@ -143,8 +143,7 @@ def createFigBiggestInterestAreas():
     df_exploded['Interessen'] = df_exploded['Interessen'].map(interest_map)
 
     # Flatten the list of interests in each row, considering empty interest rows
-    flattened_interests = df_exploded['Interessen'].astype(str) #.............................................
-
+    flattened_interests = df_exploded['Interessen']
     # Remove leading and trailing punctuation
     flattened_interests = flattened_interests.str.replace('^\W+|\W+$', '', regex=True)
 
@@ -301,9 +300,8 @@ def createFigAverageEmployees():
 
 def createFigInterestPerEntity():
 
-    df_exploded = cleanedDataset
-
-    df_exploded['Interessen'] = cleanedDataset['Interessen'].astype(str)
+    df_exploded = cleanedDataset.copy()
+    df_exploded['Interessen'] = df_exploded['Interessen'].astype(str)
     df_exploded['Interessen'] = df_exploded['Interessen'].str.split('; ')
     df_exploded = df_exploded.explode('Interessen')
 
@@ -330,7 +328,7 @@ def createFigInterestPerEntity():
     flattened_interests = df_exploded['Interessen']
 
     # Remove leading and trailing punctuation
-    flattened_interests = flattened_interests.str.replace('^\W+|\W+$', '', regex=True)
+    #flattened_interests = flattened_interests.str.replace('^\W+|\W+$', '', regex=True)
 
     # Strip leading and trailing whitespace
     flattened_interests = flattened_interests.str.strip()
