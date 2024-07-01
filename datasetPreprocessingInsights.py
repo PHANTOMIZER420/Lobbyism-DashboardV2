@@ -186,7 +186,7 @@ def createFigUniqueInterests():
 
 def createFigAverageInterests():
 
-    df_entities = dfEntities(1)
+    df_entities = dfEntities(0)
 
     fig = px.bar(
         df_entities, 
@@ -290,6 +290,30 @@ def createFigBiggestInterestAreas():
 
 # -------------------------------------- Chapter 2 --------------------------------------
 
+def createFigEmployeesPie():
+
+    df_entities = dfEntities(0)
+
+    figPieEmployees = px.pie(df_entities, 
+                    values='Total Employees', 
+                    hover_name='Entity type',
+                    hole=0.3,
+                    title='Total employees per entity type')
+
+    figPieEmployees.update_layout({'plot_bgcolor': 'rgba(0,0,0,0)',
+                          'paper_bgcolor': 'rgba(0,0,0,0)'},
+                         uniformtext_minsize=12, 
+                         uniformtext_mode='hide',
+                         font=dict(color='white'),
+                         width=450,
+                         height=398
+    )
+
+    figPieEmployees.update_traces(textposition='inside')
+
+    return figPieEmployees
+
+
 # Plot 1
 
 def createFigSpendingsPie():
@@ -308,7 +332,7 @@ def createFigSpendingsPie():
                          uniformtext_mode='hide',
                          font=dict(color='white'),
                          width=450,
-                         height=800
+                         height=398
     )
     
     figPie.update_traces(textposition='inside')

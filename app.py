@@ -103,6 +103,8 @@ figBiggestInterestAreas = datasetPreprocessingInsights.createFigBiggestInterestA
 
 # Spendings
 
+figEmployeePie = datasetPreprocessingInsights.createFigEmployeesPie()
+
 # Plot 1
 figSpendingsPie = datasetPreprocessingInsights.createFigSpendingsPie()
 
@@ -138,8 +140,8 @@ app.layout = dbc.Container([
             # Title
             html.H1([ html.Span("Lobbyism"), html.Br(),html.Span("in Germany")]),
             # Info text
-            html.P("This dashboard shows you some insights from the german parliament lobby register.")
-        ],style={"vertical-alignment": "top", "height": 270}),
+            html.P("This dashboard shows selected insights from the official German parliament lobby register. It also provides an explorative feature, that allows users to search a cleaned version of the lobby dataset, as well as a network that reveals connections between different entities and their interests.")
+        ],style={"vertical-alignment": "top", 'margin-bottom': 20, "height": 270}),
 
         # Tab selection
         html.Div([
@@ -199,7 +201,7 @@ app.layout = dbc.Container([
                     className='customDropdown',
                     style={'background-color': 'black'}
                 )
-            ])
+            ]),
         ],
         id='filter-section-insigths'
         ),
@@ -296,7 +298,7 @@ app.layout = dbc.Container([
         id='filter-section-explore',
         ),
     ], 
-    style={'width': 340, 'margin-top': 50, 'margin-right': 5, 'margin-left': 15}),
+    style={'width': 340, 'margin-top': 30, 'margin-right': 5, 'margin-left': 15}),
 
 
     # -------------------------------------- Insights Tab --------------------------------------
@@ -360,12 +362,20 @@ app.layout = dbc.Container([
             ]
             ),
             #Right Column
-            dbc.Col(
-                html.Div(
-                    #Spendings Pie 
-                    dcc.Graph(figure=figSpendingsPie)
-                )
-            ),
+            dbc.Col([
+                dbc.Row(
+                    html.Div(
+                        #Spendings Pie 
+                        dcc.Graph(figure=figSpendingsPie)
+                    )
+                ),
+                dbc.Row(
+                    html.Div(
+                        #Spendings Pie 
+                        dcc.Graph(figure=figEmployeePie)
+                    )
+                ),
+            ]),
         ],
         id='insights-spendings',
         ),
