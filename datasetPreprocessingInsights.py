@@ -174,7 +174,7 @@ def createFigUniqueInterests():
                        },
                         font=dict(color='white'),
                         xaxis=dict(
-                            visible=False,
+                            visible=True,
                             showticklabels=False
                         ),
     )
@@ -194,7 +194,7 @@ def createFigAverageInterests():
         y=[df_entities['Mean Interests'], 
         df_entities['Median Interests']], 
         barmode="group",
-        title="Average number of interests",
+        title="Average number of Interests",
         hover_name='Entity type',
         hover_data=['Entity type', 'Number of entities'],
         labels={'value':'Average interests'}
@@ -207,7 +207,7 @@ def createFigAverageInterests():
                         showlegend=False,
                         font=dict(color='white'),
                         xaxis=dict(
-                            visible=False,
+                            visible=True,
                             showticklabels=False
                         )
                     )
@@ -266,7 +266,7 @@ def createFigBiggestInterestAreas():
 
     # Create a bar chart using Plotly
     fig = px.bar(interest_counts_df, y='Count', x='Interest', orientation='v',
-                title='Biggest interest areas for Lobbies in Germany', 
+                title='Biggest Interest areas for Lobbies in Germany', 
                 labels={'Count': 'Number of lobbies', 'Interest': ''})
 
     fig.update_yaxes(range=[0, 800], dtick=200)
@@ -280,7 +280,7 @@ def createFigBiggestInterestAreas():
             tickmode='array',
             tickvals=interest_counts_df['Interest'],
             ticktext=interest_counts_df['shortInterest'],
-            visible=False,
+            visible=True,
             showticklabels=False
         )
     )
@@ -358,7 +358,7 @@ def createFigSpendingsScatter():
         },
         font=dict(color='white'),
         xaxis=dict(
-            visible=False,
+            visible=True,
             showticklabels=False
         ),
         width=600,
@@ -391,7 +391,7 @@ def createFigSpendingsPerEmployee():
             tickmode='array',
             tickvals=df_entities['Entity type'],
             ticktext=df_entities['short_entity'],
-            visible=False,
+            visible=True,
             showticklabels=False
         )
     )
@@ -421,7 +421,7 @@ def createFigNumberOfEntities():#
             tickmode='array',
             tickvals=df_entities['Entity type'],
             ticktext=df_entities['short_entity'],
-            visible=False,
+            visible=True,
             showticklabels=False
         )
     )
@@ -457,7 +457,7 @@ def createFigAverageEmployees():
             tickmode='array',
             tickvals=df_entities['Entity type'],
             ticktext=df_entities['short_entity'],
-            visible=False,
+            visible=True,
             showticklabels=False
         )
     )
@@ -480,8 +480,8 @@ def createFigInterestPerEntity():
                      hover_name='Tätigkeit',
                      width=1020,
                      height=798,
-                     title='Interests per Activity (Tätigkeit) in German Lobbies',
-                     labels={'Tätigkeit': 'Activity (Tätigkeit)', 'Supercategory': 'Supercategory', 'Count': 'Number of Occurrences'}
+                     title='Interests per Entity in German Lobbies',
+                     labels={'Tätigkeit': 'Entity', 'Supercategory': 'Supercategory', 'Count': 'Number of Occurrences'}
     )
 
     fig.update_xaxes(showgrid=True, gridwidth=0.1)  # Make x-axis grid lines thinner
