@@ -9,9 +9,26 @@ import re
 filepath = 'Datasets/cleanedLobbyregister2024.csv'
 cleanedDataset = pd.read_csv(filepath)
 
+# Select text for selected insights section
+def selectInsightsText(chapter):
+    if chapter == 1:
+        return ("For the interests page, we chose to include these three plots. So let's take a quick look. The first one illustrates the average number of interests of the different lobbyists in the dataset. For this graph we illustrated the mean interests in blue and the median interests in red. So when we hover over the first bar, we can see that enterprises have an average interest count of 14, whearas xxx has an average count of xxx.",
+               "Sticking to the enterprise example, all enterprises in the dataset have 170 different interests in total. Interestingly, of all things Sustainability is the biggest interest area for Lobbies in Germany.")
+    elif chapter == 2:
+        return ("The top left plot shows the average spending per employee for all the entity types such as Unternehmen (companies), Kirchen (churches) and so on. The color coding shows the total spending of those entities - blue is low spending, red is high spending.",
+                "As you can see, to the left we have those entities with huge total spending (almost 300 million for companies and 240 millions for trade associations) but, in comparison, low spending per employee. Then we have some outliers with pretty big spendings per employees but somewhat low total spendings (e.g. a bit over 300k per employee but only about 5.5 million in total).",
+                "The lower left has a similar color coding (low spending to high spending) but for each individual entity. It shows the spending in relation to the number of employees and shows very well that larger entities not necessarilly spend more. In fact the highest spenders are in the range of about 50 to 150 employees and there is a very sharp drop when looking at entities with more employees.",
+                "Lastly the pie/donut charts on the right just shows how big of a slice each entity type has of the total spending and employees of all entities in our cleaend datasets.")
+    elif chapter == 3:
+        return "In this chapter, we will focus on the number of entities, the average number of employees, and the interests per entity in the German lobby registry. We will explore the distribution of entities, the average number of employees, and the distribution of interests across different entity types."
+    else:
+        return "No insights available for this chapter."
+
+# Truncate labels 
 def truncate_label(label, max_length=15):
         return label if len(label) <= max_length else label[:max_length] + '...'
 
+# Df
 def dfTIG():
     df_exploded = cleanedDataset.copy()
     df_exploded['Interessen'] = df_exploded['Interessen'].astype(str)
