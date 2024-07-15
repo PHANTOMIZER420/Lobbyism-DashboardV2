@@ -207,6 +207,6 @@ def plotlyNetworkEntities(GE):
                         height=796,
                         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
                         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
-                    )
+    )
     
     return figEntities

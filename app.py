@@ -207,11 +207,15 @@ app.layout = dbc.Container([
                     optionHeight=40,
                     className='customDropdown',
                     style={'background-color': 'black'}
-                )
+                ),
+                #insights chapter texts
+                html.P(datasetPreprocessingInsights.selectInsightsText(1), id='interests-text'),
+                html.P(datasetPreprocessingInsights.selectInsightsText(2), id='spendings-text'),
+                html.P(datasetPreprocessingInsights.selectInsightsText(3), id='entities-text'),
             ]),
 
         ],
-        id='filter-section-insigths'
+        id='filter-section-insights'
         ),
 
          # Filter section for network
@@ -594,16 +598,19 @@ app.layout = dbc.Container([
 # Define callback to toggle insights tab visibility
 @app.callback(
     [Output('insights-tab', 'style'), # Show the insights
-     Output('insights-chapter-dropdown', 'style')], #Show the insights filter
+     Output('filter-section-insights', 'style')], #Show the insights filter
     [Input('radio-button-group', 'value')] # Radio button for selecting tabs
 )
    
 # Toggle insights tab visibility
 def toggle_insights_tab_visibility(selected_tab):
     if selected_tab == 'INSIGHTS':
-        return ({'display': 'flex'}, {'display': 'block', 'margin-right': '20px', 'margin-top':'30px', 'background':'black'})  # Change to 'flex' to make it visible
+        return ({'display': 'flex'}, 
+                {'display': 'block', 'margin-right': '20px', 'margin-top':'30px', 'background':'black'}
+                )  # Change to 'flex' to make it visible
     else:
-        return ({'display': 'none'}, {'display': 'none'})  # Change to 'none' to hide it
+        return ({'display': 'none'}, 
+                {'display': 'none'})  # Change to 'none' to hide it
     
 
 # Inisghts chapter selection
@@ -611,7 +618,10 @@ def toggle_insights_tab_visibility(selected_tab):
     [Output('insights-interests', 'style'),
      Output('insights-spendings', 'style'),
      Output('insights-entities-1', 'style'),
-     Output('insights-entities-2', 'style')],
+     Output('insights-entities-2', 'style'),
+     Output('interests-text', 'style'),
+     Output('spendings-text', 'style'),
+     Output('entities-text', 'style')],
     [Input('insights-chapter-dropdown', 'value')]
 )
 def update_chapter_visibility(selected_chapter):
@@ -624,19 +634,26 @@ def update_chapter_visibility(selected_chapter):
     spendings_style = hidden_style
     entities_1_style = hidden_style
     entities_2_style = hidden_style
+    interests_style_text = hidden_style
+    spendings_style_text = hidden_style
+    entities_style_text = hidden_style
     
     # Update the style based on the selected chapter
     if selected_chapter == 'INTERESTS':
         interests_style = visible_style
+        interests_style_text = visible_style
     elif selected_chapter == 'SPENDINGS':
         spendings_style = visible_style
+        spendings_style_text = visible_style
     elif selected_chapter == 'ENTITIES_1':
         entities_1_style = visible_style
+        entities_style_text = visible_style
     elif selected_chapter == 'ENTITIES_2':
         entities_2_style = visible_style
-    
-    return interests_style, spendings_style, entities_1_style, entities_2_style  # Return updated styles for each chapter    
-    
+        entities_style_text = visible_style
+
+    # Return updated styles for each chapter    
+    return interests_style, spendings_style, entities_1_style, entities_2_style, interests_style_text, spendings_style_text, entities_style_text  
 
 # -------------------------------------- Explore --------------------------------------    
 
