@@ -18,11 +18,11 @@ import numpy as np
 import pandas as pd
 import random
 
-# Import graph network function 
-from graphNetwork import createNetwork, plotlyNetwork
-
 # Import dataset preprocessing function
 from datasetPreprocessingExplore import preprocess_dataset
+
+# Import graph network function 
+import graphNetwork
 
 # Import dashboard preprocessing function
 import datasetPreprocessingInsights
@@ -76,13 +76,23 @@ figX.update_layout(plot_bgcolor='#010103', width=500, height=760,
 # -------------------------------------- Network Plot --------------------------------------
 
 # Create network
-netGraph = createNetwork()
-netFigure = plotlyNetwork(netGraph)
+networkGraphInterests = graphNetwork.createNetworkInterests()
+networkFigureInterests = graphNetwork.plotlyNetworkInterests(networkGraphInterests)
 
-netFigure.update_layout(
+networkFigureInterests.update_layout(
     plot_bgcolor='black',  # Sets the plot background color to black
     paper_bgcolor='black',  # Sets the background color of the entire figure to black
-    font=dict(color='white')  # Optional: Changes the font color to white for better contrast
+    font=dict(color='white')  # Changes the font color to white for better contrast
+)
+
+# Create network
+networkGraphEntities = graphNetwork.createNetworkEntities()
+networkFigureEntities = graphNetwork.plotlyNetworkEntities(networkGraphEntities)
+
+networkFigureEntities.update_layout(
+    plot_bgcolor='black',  # Sets the plot background color to black
+    paper_bgcolor='black',  # Sets the background color of the entire figure to black
+    font=dict(color='white')  # Changes the font color to white for better contrast
 )
 
 # -------------------------------------- Insights Plots --------------------------------------
@@ -124,7 +134,6 @@ figAverageEmployees = datasetPreprocessingInsights.createFigAverageEmployees()
 
 # Plot 3
 figInterestsPerEntity = datasetPreprocessingInsights.createFigInterestPerEntity()
-
 
 
 
@@ -203,6 +212,29 @@ app.layout = dbc.Container([
 
         ],
         id='filter-section-insigths'
+        ),
+
+         # Filter section for network
+        html.Div([
+
+            # Network topic selection dropdown
+            html.Div([
+                dcc.Dropdown(
+                    id='network-chapter-dropdown',
+                    options=[
+                        {'label': 'Interests', 'value': 'INTERESTS'},
+                        {'label': 'Entities', 'value': 'ENTITIES'},
+                    ],
+                    value='INTERESTS',
+                    clearable=True,
+                    optionHeight=40,
+                    className='customDropdown',
+                    style={'background-color': 'black', 'display': 'none'}
+                )
+            ]),
+
+        ],
+        id='filter-section-network'
         ),
 
         # Filter section explore
@@ -511,19 +543,42 @@ app.layout = dbc.Container([
 
     # -------------------------------------- Network Tab --------------------------------------
 
+    # Insights container
     html.Div([
-        html.Div([
-            dcc.Graph(figure=netFigure), 
+
+        html.Div(
+        [
+            html.Div(dcc.Graph(figure=networkFigureInterests))
         ],
-        id='network-tab',
+        id='network-interests',
+        style={
+            'width': 'auto', 
+            'margin-top': 50,
+            'margin-right': 25,
+            'margin-bottom': 25,
+        }), 
+
+        html.Div(
+        [
+            html.Div(dcc.Graph(figure=networkFigureEntities))
+        ],
+        id='network-entities',
+        style={
+            'width': 'auto', 
+            'margin-top': 50,
+            'margin-right': 25,
+            'margin-bottom': 25,
+        })
+    ],
+    id='network-tab',
         style={
             'display': 'none',
             'width': 'auto', 
             'margin-top': 50,
             'margin-right': 25,
             'margin-bottom': 25,
-        })
-    ]),    
+        }
+    ),
 
 ],
     # Style for the dash container
@@ -570,8 +625,6 @@ def update_chapter_visibility(selected_chapter):
     entities_1_style = hidden_style
     entities_2_style = hidden_style
     
-    # Add more chapters as needed
-    
     # Update the style based on the selected chapter
     if selected_chapter == 'INTERESTS':
         interests_style = visible_style
@@ -581,7 +634,6 @@ def update_chapter_visibility(selected_chapter):
         entities_1_style = visible_style
     elif selected_chapter == 'ENTITIES_2':
         entities_2_style = visible_style
-    # Add more conditions as needed for additional chapters
     
     return interests_style, spendings_style, entities_1_style, entities_2_style  # Return updated styles for each chapter    
     
@@ -651,16 +703,43 @@ def render_content(tab):
 
 # Define callback to toggle network tab visibility
 @app.callback(
-    Output('network-tab', 'style'), # Show the network tab      
+    [Output('network-tab', 'style'), # Show the network tab
+    Output('network-chapter-dropdown', 'style')],      
     Input('radio-button-group', 'value') # Radio button for selecting tabs
 )
-   
+
 # Toggle network tab visibility
 def toggle_network_tab_visibility(selected_tab):
     if selected_tab == 'NETWORK':
-        return {'display': 'flex'}  # Change to 'flex' to make it visible
+        return ({'display': 'flex'}, {'display': 'block', 'margin-right': '20px', 'margin-top': '30px', 'background':'black'}) # Change to 'flex' to make it visible
     else:
-        return {'display': 'none'}  # Change to 'none' to hide it
+        return ({'display': 'none'}, {'display': 'none'}) # Change to 'none' to hide it
+
+    # Network chapter selection
+@app.callback(
+    [Output('network-interests', 'style'),
+     Output('network-entities', 'style'),],
+    [Input('network-chapter-dropdown', 'value')]
+)
+
+def update_chapter_visibility(selected_chapter):
+    # Default styles for hidden and visible chapters
+    hidden_style = {'display': 'none'}
+    visible_style = {'display': 'flex'}
+    
+    # Initialize all chapters to be hidden
+    interests_style = hidden_style
+    entities_style = hidden_style
+    
+    # Add more chapters as needed
+    
+    # Update the style based on the selected chapter
+    if selected_chapter == 'INTERESTS':
+        interests_style = visible_style
+    elif selected_chapter == 'ENTITIES':
+        entities_style = visible_style
+    
+    return interests_style, entities_style # Return updated styles for each chapter 
 
 
 # -------------------------------------- Update Original Datatable --------------------------------------
@@ -703,7 +782,7 @@ def update_table(selected_columns):
     Input('entity-dropdown', 'value')] # Update table based on selected columns
 )
 def update_table(selected_columns, selected_year, selected_employees, selected_spending, selected_spending_per_employee, selected_entity):
-    filtered_df = cDf.copy()  # Start with a copy of the original DataFrame to avoid modifying it directly
+    filtered_df = cDf.copy() 
     
     # Filter by year
     if selected_year:
@@ -761,8 +840,6 @@ def update_table(selected_columns, selected_year, selected_employees, selected_s
         cDff = filtered_df[selected_columns]
     else:
         cDff = filtered_df.copy()
-
-    # Sort if there is a sort_by criteria
 
     # Prepare columns for the DataTable
     columns = [{'name': i, 'id': i} for i in selected_columns] if selected_columns else [{'name': i, 'id': i} for i in filtered_df.columns]
