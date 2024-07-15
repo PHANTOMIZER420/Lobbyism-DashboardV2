@@ -26,13 +26,11 @@ from datasetPreprocessingExplore import preprocess_dataset
 
 # Import dashboard preprocessing function
 import datasetPreprocessingInsights
-#from datasetPreprocessingInsights import createFigUniqueInterests, createFigAverageInterests, createFigBiggestInterestAreas, createFigSpendingsPie , createFigSpendingsScatter
 
 # -------------------------------------- APP SETUP --------------------------------------
 
 # Create a Dash app
 app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.FLATLY])
-
 
 # -------------------------------------- DATA PREPROCESSING --------------------------------------
 
@@ -202,6 +200,7 @@ app.layout = dbc.Container([
                     style={'background-color': 'black'}
                 )
             ]),
+
         ],
         id='filter-section-insigths'
         ),
@@ -620,12 +619,8 @@ def render_content(tab):
                     sort_by=[],
                     filter_action='native',
                     sort_action='native',
-                    css=[{
-                        'selector': 'table',
-                        'rule': 'table-layout: fixed'  # note - this does not work with fixed_rows
-                    }],
                     style_data={
-                    'width': '{}%'.format(100. / len(cDf.columns))
+                    'overflow': 'ellipsis',
                     },
                     style_table={'overflowX': 'auto', 'overflowY': 'auto', 'height': 511},
                     style_header={'backgroundColor': 'black','color': '#3498db','fontWeight': 'bold', 'fontFamily': 'sans-serif'},
