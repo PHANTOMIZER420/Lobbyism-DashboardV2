@@ -3,7 +3,7 @@ import networkx as nx
 import pandas as pd 
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-from datasetPreprocessingInsights import dfTIG
+from datasetPreprocessingInsights import dfTIG, dfEntities
 
 # Network Superinterrest
 def createNetworkInterests() :
@@ -112,7 +112,7 @@ def plotlyNetworkInterests(GI):
 # Network Superinterrest
 def createNetworkEntities() :
 
-    df = dfTIG()
+    df = dfEntities(0)
 
     # Create an empty graph
     GE = nx.Graph()
@@ -121,22 +121,22 @@ def createNetworkEntities() :
     for index, row in df.iterrows():
         # Assuming 'Entity' is a column in your DataFrame for node names
         # Add or update node for EntityA
-        if not GE.has_node(row['Tätigkeit']):
-            GE.add_node(row['Tätigkeit'])
+        if not GE.has_node(row['Entity type']):
+            GE.add_node(row['Entity type'])
         else:
             # Update node attributes if necessary
             pass
 
         # Add or update node for EntityB
-        if not GE.has_node(row['Supercategory']):
-            GE.add_node(row['Supercategory'])
+        if not GE.has_node(row['Spending per Employee']):
+            GE.add_node(row['Spending per Employee'])
         else:
             # Update node attributes if necessary
             pass
 
         # Add edges between EntityA and EntityB
         # This assumes each row in your DataFrame represents a relationship between EntityA and EntityB
-        GE.add_edge(row['Tätigkeit'], row['Supercategory'])
+        GE.add_edge(row['Entity type'], row['Spending per Employee'])
 
     return GE
 
@@ -175,8 +175,11 @@ def plotlyNetworkEntities(GE):
         node_y.append(y)
         text.append(node)
         node_degree = degrees[node]
-        # Normalize degree to [0,1] for colorscale
-        normalized_degree = (node_degree - min_degree) / (max_degree - min_degree)
+        # Handle zero division error
+        if max_degree - min_degree != 0:
+            normalized_degree = (node_degree - min_degree) / (max_degree - min_degree)
+        else:
+            normalized_degree = 0
         node_color.append(normalized_degree)
 
     node_trace = go.Scatter(
