@@ -111,7 +111,7 @@ def dfTIG():
     df_exploded_small = df_exploded_small.fillna('Sonstige Interessenbereiche')
 
     # Group by 'Tätigkeit' and 'Interessen' and count the occurrences
-    taetigkeit_interessen_counts = df_exploded_small.groupby(['Tätigkeit', 'Supercategory']).size().reset_index(name='Count')
+    taetigkeit_interessen_counts = df_exploded_small.groupby(['Name','Tätigkeit', 'Supercategory']).size().reset_index(name='Count').groupby(['Tätigkeit', 'Supercategory']).size().reset_index(name='Count')
 
     taetigkeit_interessen_counts['short_entity'] = [truncate_label(label) for label in taetigkeit_interessen_counts['Tätigkeit']]
 
