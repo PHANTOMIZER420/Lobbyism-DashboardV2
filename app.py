@@ -180,7 +180,7 @@ app.layout = dbc.Container([
                     dbc.ModalHeader(dbc.ModalTitle("About")),
                     dbc.ModalBody("..."),
                     dbc.ModalFooter([
-                        html.A("GIT", href="https://github.com/PHANTOMIZER420/Lobbyism-DashboardV2", className="btn btn-primary"),
+                        html.A("GIT", href="https://gitlab.informatik.uni-bremen.de/tspradau/lobbyism-in-germany", className="btn btn-primary"),
                     dbc.Button("Close", id="close-about-modal", className="ms-auto", n_clicks=0)
                     ]),
                 ], id="about-modal", is_open=False),  # Initially hidden
