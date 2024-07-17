@@ -483,7 +483,8 @@ app.layout = dbc.Container([
                     value=[cDf.columns[0],   # Name
                            cDf.columns[18],  # AVG Spending
                            cDf.columns[21],  # Fiscal Year
-                           cDf.columns[4]],  # Entity
+                           cDf.columns[4],   # Entity
+                           cDf.columns[22]], # Average/Employee 
                     optionHeight=40,
                     className='customDropdown',
                     style={'display':'none', 'background-color': 'black'}
@@ -703,10 +704,6 @@ def render_content(tab):
                     sort_by=[],
                     filter_action='native',
                     sort_action='native',
-                    css=[{
-                        'selector': 'table',
-                        'rule': 'table-layout: fixed'  # note - this does not work with fixed_rows
-                    }],
                     style_data={
                     'width': '{}%'.format(100. / len(oDf.columns)),
                     'textOverflow': 'hidden'
