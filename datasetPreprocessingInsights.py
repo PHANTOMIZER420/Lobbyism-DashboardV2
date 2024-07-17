@@ -12,12 +12,12 @@ cleanedDataset = pd.read_csv(filepath)
 # Select text for selected insights section
 def selectInsightsText(chapter):
     if chapter == 1:
-        return ("For the interests page, we chose to include these three plots. The first one illustrates the average number of interests of the different lobbyists in the dataset. For this graph we illustrated the mean interests in blue and the median interests in red. So when we hover over the first bar, we can see that enterprises have an average interest count of 14, where science has an average count of 2.",
+        return ("The first plot of the interests page illustrates the average number of interests of the different lobbyists in the dataset. For this graph we illustrated the mean interests in blue and the median interests in red. So when we hover over the first bar, we can see that enterprises have an average interest count of 14, where science has an average count of 2. ",
                "Sticking to the enterprise example, all enterprises in the dataset have 170 unique interests in total. Interestingly, of all interests Sustainability is the biggest interest area for Lobbies in Germany.")
     elif chapter == 2:
-        return ("The top left plot shows the average spending per employee for all the entity types and the color coding is an indicator for the total spending of those entities - blue is low spending, red is high spending.",
-                "The lower left has a similar color coding but for each individual entity. It shows the spending in relation to the number of employees and shows very well that larger entities not necessarilly spend more.",
-                "Lastly the pie/donut charts on the right just shows how big of a slice each entity type has of the total spending and employees of all entities in our cleaend datasets.")
+        return ("The first plot shows the average spending per employee for all the entity types and the color coding is an indicator for the total spending of those entities - blue is low spending, red is high spending. ",
+                "The lower left has a similar color coding but for each individual entity. It displays spending in relation to the number of employees and shows that larger entities not necessarilly spend more. ",
+                "Lastly the pie charts on the right just shows what bit slice each entity type has of the total spending and employees of all entities in our cleaend datasets.")
     elif chapter == 3:
         return "In this chapter, we will focus on the number of entities, the average number of employees, and the interests per entity in the German lobby registry. We will explore the distribution of entities, the average number of employees, and the distribution of interests across different entity types."
     else:

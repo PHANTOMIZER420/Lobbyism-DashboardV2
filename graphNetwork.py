@@ -112,7 +112,21 @@ def plotlyNetworkInterests(GI):
 # Network Superinterrest
 def createNetworkEntities() :
 
-    df = dfEntities(0)
+    # Read cleaned dataset
+    filepath = 'Datasets/cleanedLobbyregister2024.csv'
+    cleanedDataset = pd.read_csv(filepath)
+
+    # Split the values in "Interessen- und Vorhabenbereiche" column and create new rows
+    df = cleanedDataset.copy()
+
+    df['Interessen'] = cleanedDataset['Interessen'].str.split('; ')
+    df = df.explode('Interessen')
+
+    # Group by "Tätigkeit" and count the number of unique "Interessen" for each
+    taetigkeit_interessen_counts = df.groupby('Tätigkeit')['Interessen'].nunique().reset_index()
+    taetigkeit_interessen_counts.columns = ['Tätigkeit', 'Unique_Interessen_Count']
+
+    #taetigkeit_interessen_counts['short_entity'] = [truncate_label(label) for label in taetigkeit_interessen_counts['Tätigkeit']]
 
     # Create an empty graph
     GE = nx.Graph()
@@ -121,22 +135,22 @@ def createNetworkEntities() :
     for index, row in df.iterrows():
         # Assuming 'Entity' is a column in your DataFrame for node names
         # Add or update node for EntityA
-        if not GE.has_node(row['Entity type']):
-            GE.add_node(row['Entity type'])
+        if not GE.has_node(row['Tätigkeit']):
+            GE.add_node(row['Tätigkeit'])
         else:
             # Update node attributes if necessary
             pass
 
         # Add or update node for EntityB
-        if not GE.has_node(row['Spending per Employee']):
-            GE.add_node(row['Spending per Employee'])
+        if not GE.has_node(row['Interessen']):
+            GE.add_node(row['Interessen'])
         else:
             # Update node attributes if necessary
             pass
 
         # Add edges between EntityA and EntityB
         # This assumes each row in your DataFrame represents a relationship between EntityA and EntityB
-        GE.add_edge(row['Entity type'], row['Spending per Employee'])
+        GE.add_edge(row['Tätigkeit'], row['Interessen'])
 
     return GE
 

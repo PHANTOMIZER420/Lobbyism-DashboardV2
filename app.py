@@ -226,8 +226,8 @@ app.layout = dbc.Container([
                 dcc.Dropdown(
                     id='network-chapter-dropdown',
                     options=[
-                        {'label': 'Interconnections of high level interests and entities', 'value': 'INTERESTS'},
-                        {'label': 'Entities', 'value': 'ENTITIES'},
+                        {'label': 'Interconnections of top level interests and entities', 'value': 'INTERESTS'},
+                        {'label': 'Entities and the distribution of their unique interests', 'value': 'ENTITIES'},
                     ],
                     value='INTERESTS',
                     clearable=True,
