@@ -168,7 +168,7 @@ def plotlyNetworkEntities(GE):
 
     edge_trace = go.Scatter(
         x=edge_x, y=edge_y,
-        line=dict(width=0.5, color='red'),
+        line=dict(width=0.5, color='blue'),
         hoverinfo='none',
         mode='lines')
 
